@@ -8,7 +8,7 @@ A Django client for `staff-sso`
 
 # Installation
 
-`pip install ...`
+`pip install -e https://github.com/uktrade/django-staff-sso-client.git#egg_info=authbroker_client`
 
 # Configuration
 
@@ -23,19 +23,31 @@ INSTALLED_APPS=[
 
 ```
 # authbroker config
-AUTHBROKER_URL = 'speak-to-webops'
-AUTHBROKER_CLIENT_ID = 'speak-to-webops'
-AUTHBROKER_CLIENT_SECRET = 'speak-to-webops'
+AUTHBROKER_URL = 'speak-to-webops-team-for-access'
+AUTHBROKER_CLIENT_ID = 'speak-to-webops-team-for-access'
+AUTHBROKER_CLIENT_SECRET = 'speak-to-webops-team-for-access'
 AUTHBROKER_SCOPES = 'read write'
 ```
 
-Add to your main `urls.py` file:
+Add the `'authbroker_client.backends.AuthbrokerBackend'` authentication backend, e.g:
 
-`path('auth/', include('authbroker_client.urls')),`
+```
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'authbroker_client.backends.AuthbrokerBackend',
+]
+```
+
+Then finally add this to your main `urls.py` file:
+
+`    path('auth/', include('authbroker_client.urls', namespace='authbroker')),`
+
 
 You should now have an `/auth/login/` URL which directs users through the `staff-sso` login flow. Once a user is
 authenticated via `staff-sso` (and chosen identify provider), they will be redirected back to your application.
 A local django user with a matching email address will then be logged in. The user entry will be created if it does
 not already exist in the database.
+
+Once authenticated, the user will be redirected to `settings.LOGIN_REDIRECT_URL`
 
 Use the django `@login_required` decorator to protect your views.

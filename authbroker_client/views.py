@@ -2,6 +2,7 @@ from django.views.generic.base import RedirectView, View
 from django.shortcuts import redirect
 from django.http import HttpResponseBadRequest, HttpResponseServerError
 from django.conf import settings
+from django.contrib.auth import authenticate, login
 
 from raven.contrib.django.raven_compat.models import client
 from .client import get_client, AUTHORISATION_URL, TOKEN_URL, TOKEN_SESSION_KEY
@@ -38,8 +39,6 @@ class AuthCallbackView(View):
                 client_secret=settings.AUTHBROKER_CLIENT_SECRET,
                 code=auth_code)
 
-            profile = get_client(self.request)
-
             self.request.session[TOKEN_SESSION_KEY] = dict(token)
 
             del self.request.session[TOKEN_SESSION_KEY + '_oauth_state']
@@ -51,7 +50,11 @@ class AuthCallbackView(View):
         # would raise in this instance.
         except BaseException:
             client.captureException()
-            return redirect('authbroker_login')
 
-        # TODO: make the redirect url configurable
-        return redirect('/')
+        # create the user
+        user = authenticate(request)
+
+        if user is not None:
+            login(request, user)
+
+        return redirect(getattr(settings, 'LOGIN_REDIRECT_URL', '/'))

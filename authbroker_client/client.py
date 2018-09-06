@@ -16,19 +16,25 @@ TOKEN_CHECK_PERIOD_SECONDS = 60
 SCOPE = 'read write'
 
 
-def get_client(request, **kwargs):
+def get_client(request=None, **kwargs):
+    redirect_uri = request.build_absolute_uri(reverse('authbroker:callback'))
+
     return OAuth2Session(
         settings.AUTHBROKER_CLIENT_ID,
-        redirect_uri=request.build_absolute_uri(reverse('authbroker_callback')),
+        redirect_uri=redirect_uri,
         scope=SCOPE,
         token=request.session.get(TOKEN_SESSION_KEY, None),
         **kwargs)
 
 
-def has_valid_token(request):
+def has_valid_token(client):
     """Does the session have a valid token?"""
 
-    return get_client(request).authorized
+    return client.authorized
+
+
+def get_profile(client):
+    return client.get(PROFILE_URL).json()
 
 
 def authbroker_login_required(func):
@@ -37,9 +43,8 @@ def authbroker_login_required(func):
     not an authenticated django user."""
 
     def decorated(request):
-        if not has_valid_token(request):
+        if not has_valid_token(get_client(request)):
             return redirect('authbroker_login')
 
         return func(request)
     return decorated
-
