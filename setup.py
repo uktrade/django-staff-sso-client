@@ -9,7 +9,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='django_authbroker_client',
+    name='django_staff_sso_client',
     version=__version__,
     packages=find_packages(),
     include_package_data=True,
@@ -17,8 +17,6 @@ setup(
     description='Reusable Django app to facilitate gov.uk Staff Single Sign On',
     long_description=README,
     url='https://gov.uk/',
-    author='Harel Malka',
-    author_email='harel@harelmalka.com',
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
