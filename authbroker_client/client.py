@@ -44,7 +44,7 @@ def authbroker_login_required(func):
 
     def decorated(request):
         if not has_valid_token(get_client(request)):
-            return redirect('authbroker_login')
+            return redirect('authbroker:login')
 
         return func(request)
     return decorated
