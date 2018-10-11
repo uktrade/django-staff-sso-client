@@ -50,11 +50,17 @@ not already exist in the database.
 
 Once authenticated, the user will be redirected to `settings.LOGIN_REDIRECT_URL`
 
-Use the django `@login_required` decorator to protect your views.
+Use the django `@login_required` decorator to protect individual views, or if you want to protect all views use this middleware:
+
+```
+MIDDLEWARE = [
+    [...]
+    'authbroker_client.middleware.ProtectAllViewsMiddleware',
+]
+```
 
 # TODO:
 
 * add some tests
-* ensure has_valid_token() rechecks with `staff-sso` after grace period (e.g. 1 minute)
-* add middleware to protect all views
-* improve exception catching logic in `authbroker_client/views.py`
+* ensure has_valid_token() checks with `staff-sso` after grace period (e.g. 1 minute)
+* improve exception handling logic in `authbroker_client/views.py`
