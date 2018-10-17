@@ -38,6 +38,16 @@ AUTHENTICATION_BACKENDS = [
 ]
 ```
 
+Add the LOGIN_URL ( it must be '/auth/login' )
+```
+LOGIN_URL = '/auth/login'
+```
+
+Add the LOGIN_REDIRECT_URL for e.g.
+```
+LOGIN_REDIRECT_URL = 'home_page'
+```
+
 Then finally add this to your main `urls.py` file:
 
 `    path('auth/', include('authbroker_client.urls', namespace='authbroker')),`
@@ -58,6 +68,8 @@ MIDDLEWARE = [
     'authbroker_client.middleware.ProtectAllViewsMiddleware',
 ]
 ```
+
+if you do like to use admin interface  in your app, when using this module, you will also need to install and configure the [custom_usermodel](https://github.com/uktrade/django-staff-sso-usermodel).
 
 # TODO:
 
