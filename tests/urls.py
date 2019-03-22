@@ -15,11 +15,19 @@ class HomePageView(View):
 
 if django.VERSION[0] >= 2:
     urlpatterns = [
-        path('auth/', include('authbroker_client.urls', namespace='authbroker')),
+        path('auth/', include(
+            'authbroker_client.urls',
+            namespace='authbroker',
+            app_name='authbroker_client'
+        )),
         path('', HomePageView.as_view(), name='home')
     ]
 else:
     urlpatterns = [
-        url('^auth/', include('authbroker_client.urls', namespace='authbroker')),
+        url('^auth/', include(
+            'authbroker_client.urls',
+            namespace='authbroker',
+            app_name='authbroker_client'
+        )),
         url(r'^$', HomePageView.as_view(), name='home')
     ]

@@ -1,16 +1,21 @@
 # Django-staff-sso-client
 
 [![CircleCI](https://circleci.com/gh/uktrade/django-staff-sso-client/tree/master.svg?style=svg)](https://circleci.com/gh/uktrade/django-staff-sso-client/tree/master)
+[![codecov](https://codecov.io/gh/uktrade/django-staff-sso-client/branch/master/graph/badge.svg)](https://codecov.io/gh/uktrade/django-staff-sso-client)
 
-# Overview
 
 A Django client for `staff-sso`
 
-# Installation
+## Requirements
+
+[Python 3.6](https://www.python.org/downloads/release/python-368/)
+[Django>=1.11](https://www.djangoproject.com/)
+
+## Installation
 
 `pip install -e git+https://github.com/uktrade/django-staff-sso-client.git#egg=authbroker_client`
 
-# Configuration
+## Configuration
 
 Add the following to your settings file:
 
@@ -26,7 +31,6 @@ INSTALLED_APPS=[
 AUTHBROKER_URL = 'speak-to-webops-team-for-access'
 AUTHBROKER_CLIENT_ID = 'speak-to-webops-team-for-access'
 AUTHBROKER_CLIENT_SECRET = 'speak-to-webops-team-for-access'
-AUTHBROKER_SCOPES = 'read write'
 ```
 
 Add the `'authbroker_client.backends.AuthbrokerBackend'` authentication backend, e.g:
@@ -39,8 +43,9 @@ AUTHENTICATION_BACKENDS = [
 ```
 
 Add the LOGIN_URL ( it must be '/auth/login' )
+
 ```
-LOGIN_URL = '/auth/login'
+LOGIN_URL = 'authbroker:login'
 ```
 
 Add the LOGIN_REDIRECT_URL for e.g.
@@ -50,7 +55,11 @@ LOGIN_REDIRECT_URL = 'home_page'
 
 Then finally add this to your main `urls.py` file:
 
-`    path('auth/', include('authbroker_client.urls', namespace='authbroker')),`
+`path('auth/', include('authbroker_client.urls', namespace='authbroker', app_name='authbroker_client'))`
+
+or, if you're using Django<2:
+
+`url('^auth/', include('authbroker_client.urls', namespace='authbroker', app_name='authbroker_client'))`
 
 
 You should now have an `/auth/login/` URL which directs users through the `staff-sso` login flow. Once a user is
@@ -71,8 +80,7 @@ MIDDLEWARE = [
 
 if you do like to use admin interface  in your app, when using this module, you will also need to install and configure the [custom_usermodel](https://github.com/uktrade/django-staff-sso-usermodel).
 
-# TODO:
+## TODO:
 
-* add some tests
 * ensure has_valid_token() checks with `staff-sso` after grace period (e.g. 1 minute)
 * improve exception handling logic in `authbroker_client/views.py`

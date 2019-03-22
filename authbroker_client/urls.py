@@ -8,9 +8,6 @@ except ImportError:
 from .views import AuthView, AuthCallbackView
 
 
-app_name = 'authbroker_client'
-
-
 if django.VERSION[0] >= 2:
     urlpatterns = [
         path('login/', AuthView.as_view(), name='login'),
