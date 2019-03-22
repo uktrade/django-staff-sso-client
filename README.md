@@ -1,6 +1,6 @@
 # Django-staff-sso-client
 
-NOTE: this project is still very much WIP
+[![CircleCI](https://circleci.com/gh/uktrade/django-staff-sso-client/tree/master.svg?style=svg)](https://circleci.com/gh/uktrade/django-staff-sso-client/tree/master)
 
 # Overview
 

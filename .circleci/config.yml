@@ -1,0 +1,39 @@
+version: 2
+jobs:
+  test_django2:
+    docker:
+      - image: circleci/python:3.6.8
+    steps:
+      - checkout
+      - run:
+          name: Create virtualenv and install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            make test_requirements
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            make pytest
+            codecov
+
+  flake8:
+    docker:
+    - image: circleci/python:3.6.8
+    steps:
+    - checkout
+    - run:
+        name: Run flake8
+        command: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install flake8
+          flake8 . --exclude=venv
+
+workflows:
+  version: 2
+  test_and_publish_to_pypi:
+    jobs:
+      - test_django2
+      - flake8
