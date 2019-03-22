@@ -5,7 +5,7 @@ from django.views import View
 try:
     from django.urls import path, include
 except ImportError:
-    from django.conf.urls import url
+    from django.conf.urls import url, include
 
 
 class HomePageView(View):
@@ -21,5 +21,5 @@ if django.VERSION[0] >= 2:
 else:
     urlpatterns = [
         url('^auth/', include('authbroker_client.urls', namespace='authbroker')),
-        url(r'^/', HomePageView.as_view(), name='home')
+        url(r'^$', HomePageView.as_view(), name='home')
     ]
