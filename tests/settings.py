@@ -28,7 +28,7 @@ LOGIN_REDIRECT_URL = 'home'
 
 
 # authbroker config
-AUTHBROKER_URL = 'debug'
+AUTHBROKER_URL = 'https://test.com'
 AUTHBROKER_CLIENT_ID = 'debug'
 AUTHBROKER_CLIENT_SECRET = 'debug'
 

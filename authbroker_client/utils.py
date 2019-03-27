@@ -1,7 +1,8 @@
+import functools
 from urllib.parse import urljoin
 
-from django.urls import reverse
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.conf import settings
 
 from requests_oauthlib import OAuth2Session
@@ -16,7 +17,7 @@ TOKEN_CHECK_PERIOD_SECONDS = 60
 SCOPE = 'read write'
 
 
-def get_client(request=None, **kwargs):
+def get_client(request, **kwargs):
     redirect_uri = request.build_absolute_uri(reverse('authbroker:callback'))
 
     return OAuth2Session(
@@ -42,6 +43,7 @@ def authbroker_login_required(func):
     This is different to the @login_required decorator in that it only checks for a valid authbroker Oauth2 token,
     not an authenticated django user."""
 
+    @functools.wraps(func)
     def decorated(request):
         if not has_valid_token(get_client(request)):
             return redirect('authbroker:login')

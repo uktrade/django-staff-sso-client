@@ -17,8 +17,7 @@ if django.VERSION[0] >= 2:
     urlpatterns = [
         path('auth/', include(
             'authbroker_client.urls',
-            namespace='authbroker',
-            app_name='authbroker_client'
+            namespace='authbroker'
         )),
         path('', HomePageView.as_view(), name='home')
     ]
@@ -26,8 +25,7 @@ else:
     urlpatterns = [
         url('^auth/', include(
             'authbroker_client.urls',
-            namespace='authbroker',
-            app_name='authbroker_client'
+            namespace='authbroker'
         )),
         url(r'^$', HomePageView.as_view(), name='home')
     ]

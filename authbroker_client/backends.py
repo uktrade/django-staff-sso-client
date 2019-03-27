@@ -1,6 +1,6 @@
 import logging
 from django.contrib.auth import get_user_model
-from authbroker_client.client import get_client, has_valid_token, get_profile
+from authbroker_client.utils import get_client, has_valid_token, get_profile
 
 
 logger = logging.getLogger('authbroker-client')
@@ -8,7 +8,6 @@ logger = logging.getLogger('authbroker-client')
 
 class AuthbrokerBackend:
     def authenticate(self, request, **kwargs):
-
         client = get_client(request)
         if has_valid_token(client):
             User = get_user_model()
@@ -17,7 +16,10 @@ class AuthbrokerBackend:
 
             user, created = User.objects.get_or_create(
                 email=profile['email'],
-                defaults={'first_name': profile['first_name'], 'last_name': profile['last_name']})
+                defaults={
+                    'first_name': profile['first_name'],
+                    'last_name': profile['last_name']
+                })
 
             if created:
                 user.set_unusable_password()
