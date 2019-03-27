@@ -58,7 +58,7 @@ def test_authbroker_login_required_allowed_decorator(mocked_has_valid_token):
 
 @mock.patch('authbroker_client.utils.get_client', mock.Mock())
 @mock.patch('authbroker_client.utils.has_valid_token')
-def test_authbroker_login_required_allowed_decorator(mocked_has_valid_token):
+def test_authbroker_login_required_not_allowed_decorator(mocked_has_valid_token):
     mocked_has_valid_token.return_value = False
     func = mock.Mock()
     decorated_func = authbroker_login_required(func)
