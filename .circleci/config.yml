@@ -37,7 +37,6 @@ jobs:
           make pytest
           codecov
 
-
   flake8:
     docker:
     - image: circleci/python:3.6.8
@@ -51,6 +50,18 @@ jobs:
           pip install flake8
           flake8 . --exclude=venv
 
+  publish_to_pypi:
+    docker:
+    - image: circleci/python:3.6.8
+    steps:
+    - checkout
+    - run:
+        command: |
+          python3 -m venv .venv
+          . .venv/bin/activate
+          make test_requirements
+          make publish
+
 workflows:
   version: 2
   test_and_publish_to_pypi:
@@ -58,3 +69,10 @@ workflows:
       - test_django2
       - test_django111
       - flake8
+      - publish_to_pypi:
+          requires:
+          - test_django2
+          - test_django111
+          filters:
+            branches:
+              only: master
