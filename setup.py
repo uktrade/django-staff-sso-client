@@ -47,14 +47,15 @@ setup(
     ],
     extras_require={
         'test': [
-            'pytest==3.0.2',
-            'pytest-cov==2.3.1',
+            'pytest',
+            'pytest-cov',
+            'pytest-sugar',
             'flake8==3.0.4',
-            'requests_mock==1.1.0',
-            'codecov==2.0.9',
-            'twine>=1.11.0,<2.0.0',
-            'wheel>=0.31.0,<1.0.0',
-            'setuptools>=38.6.0,<39.0.0',
+            'requests_mock',
+            'codecov',
+            'twine',
+            'wheel',
+            'setuptools',
             'pytest-django',
             'requests-mock'
         ]
