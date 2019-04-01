@@ -52,3 +52,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'authbroker_client.middleware.ProtectAllViewsMiddleware',
 ]
+
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
