@@ -2,6 +2,9 @@
 
 [![CircleCI](https://circleci.com/gh/uktrade/django-staff-sso-client/tree/master.svg?style=svg)](https://circleci.com/gh/uktrade/django-staff-sso-client/tree/master)
 [![codecov](https://codecov.io/gh/uktrade/django-staff-sso-client/branch/master/graph/badge.svg)](https://codecov.io/gh/uktrade/django-staff-sso-client)
+![PyPI](https://img.shields.io/pypi/v/django-staff-sso-client.svg)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-staff-sso-client.svg)
+![PyPI - Django Version](https://img.shields.io/pypi/djversions/django-staff-sso-client.svg)
 
 
 A Django client for `staff-sso`
@@ -13,7 +16,7 @@ A Django client for `staff-sso`
 
 ## Installation
 
-`pip install -e git+https://github.com/uktrade/django-staff-sso-client.git#egg=authbroker_client`
+`pip install django-staff-sso-client`
 
 ## Configuration
 
