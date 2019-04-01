@@ -5,7 +5,8 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login
 
 from raven.contrib.django.raven_compat.models import client
-from .client import get_client, AUTHORISATION_URL, TOKEN_URL, TOKEN_SESSION_KEY
+from authbroker_client.utils import get_client, AUTHORISATION_URL, TOKEN_URL, \
+    TOKEN_SESSION_KEY
 
 
 class AuthView(RedirectView):
