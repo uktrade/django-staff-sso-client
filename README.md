@@ -16,7 +16,7 @@ A Django client for `staff-sso`
 
 ## Installation
 
-`pip install -e git+https://github.com/uktrade/django-staff-sso-client.git#egg=authbroker_client`
+`pip install django-staff-sso-client`
 
 ## Configuration
 
