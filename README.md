@@ -48,12 +48,12 @@ AUTHENTICATION_BACKENDS = [
 Add the LOGIN_URL ( it must be '/auth/login' )
 
 ```
-LOGIN_URL = 'authbroker:login'
+LOGIN_URL = reverse_lazy('authbroker:login')
 ```
 
 Add the LOGIN_REDIRECT_URL for e.g.
 ```
-LOGIN_REDIRECT_URL = 'home_page'
+LOGIN_REDIRECT_URL = reverse_lazy('home_page')
 ```
 
 Then finally add this to your main `urls.py` file:
