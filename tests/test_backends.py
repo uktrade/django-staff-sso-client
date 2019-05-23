@@ -25,6 +25,7 @@ def test_user_valid_user_create(mocked_has_valid_token,
     user = User.objects.get(email='user@test.com')
     assert user.first_name == 'Testo'
     assert user.last_name == 'Useri'
+    assert user.username == 'user@test.com'
     assert user.has_usable_password() is False
     assert mocked_get_client.called is True
     assert mocked_get_client.call_args == mock.call(rf)
