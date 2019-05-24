@@ -21,7 +21,7 @@ class AuthbrokerBackend:
                     'last_name': profile['last_name']
                 })
             if created:
-                user.username = profile['email']
+                setattr(user, user.USERNAME_FIELD, profile['email'])
                 user.set_unusable_password()
                 user.save()
             return user
