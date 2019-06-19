@@ -15,10 +15,7 @@ class HomePageView(View):
 
 if django.VERSION[0] >= 2:
     urlpatterns = [
-        path('auth/', include(
-            'authbroker_client.urls',
-            namespace='authbroker'
-        )),
+        path('auth/', include('authbroker_client.urls')),
         path('', HomePageView.as_view(), name='home')
     ]
 else:
