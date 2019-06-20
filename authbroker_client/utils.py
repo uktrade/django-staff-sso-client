@@ -4,7 +4,6 @@ from urllib.parse import urljoin
 from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.urls.exceptions import NoReverseMatch
 
 from requests_oauthlib import OAuth2Session
 
@@ -19,12 +18,7 @@ SCOPE = 'read write'
 
 
 def get_client(request, **kwargs):
-    try:
-        # assume app_name from urls is the namespace
-        callback_url = reverse('authbroker_client:callback')
-    except NoReverseMatch:
-        # also support apps specifying 'authbroker' as the namespace
-        callback_url = reverse('authbroker:callback')
+    callback_url = reverse('authbroker_client:callback')
     redirect_uri = request.build_absolute_uri(callback_url)
 
     return OAuth2Session(
