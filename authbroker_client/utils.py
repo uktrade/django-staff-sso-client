@@ -1,9 +1,9 @@
 import functools
 from urllib.parse import urljoin
 
+from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.conf import settings
 
 from requests_oauthlib import OAuth2Session
 
@@ -18,7 +18,8 @@ SCOPE = 'read write'
 
 
 def get_client(request, **kwargs):
-    redirect_uri = request.build_absolute_uri(reverse('authbroker:callback'))
+    callback_url = reverse('authbroker_client:callback')
+    redirect_uri = request.build_absolute_uri(callback_url)
 
     return OAuth2Session(
         settings.AUTHBROKER_CLIENT_ID,

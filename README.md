@@ -58,7 +58,7 @@ LOGIN_REDIRECT_URL = reverse_lazy('home_page')
 
 Then finally add this to your main `urls.py` file:
 
-`path('auth/', include('authbroker_client.urls', namespace='authbroker', app_name='authbroker_client'))`
+`path('auth/', include('authbroker_client.urls'))`
 
 or, if you're using Django<2:
 
