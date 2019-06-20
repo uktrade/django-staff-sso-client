@@ -24,7 +24,7 @@ def get_client(request, **kwargs):
         callback_url = reverse('authbroker_client:callback')
     except NoReverseMatch:
         # also support apps specifying 'authbroker' as the namespace
-        callback_url = reverse('authbroker:callback') 
+        callback_url = reverse('authbroker:callback')
     redirect_uri = request.build_absolute_uri(callback_url)
 
     return OAuth2Session(
