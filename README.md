@@ -48,7 +48,7 @@ AUTHENTICATION_BACKENDS = [
 Add the LOGIN_URL ( it must be '/auth/login' )
 
 ```
-LOGIN_URL = reverse_lazy('authbroker:login')
+LOGIN_URL = reverse_lazy('authbroker_client:login')
 ```
 
 Add the LOGIN_REDIRECT_URL for e.g.
