@@ -15,7 +15,7 @@ class AuthbrokerBackend:
             profile = get_profile(client)
 
             user, created = User.objects.get_or_create(
-                **{User.USERNAME_FIELD:profile['email']},
+                **{User.USERNAME_FIELD: profile['email']},
                 defaults={
                     'email': profile['email'],
                     'first_name': profile['first_name'],
