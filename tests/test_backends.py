@@ -16,6 +16,7 @@ def test_user_valid_user_create(mocked_has_valid_token,
                                 rf):
     mocked_has_valid_token.return_value = True
     mocked_get_profile.return_value = {
+        'username': 'user@test.com',
         'email': 'user@test.com',
         'first_name': 'Testo',
         'last_name': 'Useri'
@@ -40,11 +41,13 @@ def test_user_valid_user_not_create(mocked_has_valid_token,
                                     mocked_get_profile,
                                     rf):
     User = get_user_model()
-    user = User(email='user@test.com', first_name='Testo', last_name='Useri')
+    user = User(username='user@test.com', email='user@test.com',
+                first_name='Testo', last_name='Useri')
     user.set_password('password')
     user.save()
     mocked_has_valid_token.return_value = True
     mocked_get_profile.return_value = {
+        'username': 'user@test.com',
         'email': 'user@test.com',
         'first_name': 'Testo',
         'last_name': 'Useri'

@@ -9,6 +9,8 @@
 
 A Django client for `staff-sso`
 
+As of Version 4, users are looked up by username field instead of email field
+
 ## Requirements
 
 [Python 3.6](https://www.python.org/downloads/release/python-368/)
