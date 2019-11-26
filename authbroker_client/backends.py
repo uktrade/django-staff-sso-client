@@ -11,9 +11,7 @@ class AuthbrokerBackend:
         client = get_client(request)
         if has_valid_token(client):
             User = get_user_model()
-
             profile = get_profile(client)
-
             user, created = User.objects.get_or_create(
                 **{User.USERNAME_FIELD: profile['email']},
                 defaults={
@@ -21,17 +19,14 @@ class AuthbrokerBackend:
                     'first_name': profile['first_name'],
                     'last_name': profile['last_name']
                 })
-
             if created:
                 user.set_unusable_password()
                 user.save()
             return user
-
         return None
 
     def get_user(self, user_id):
         User = get_user_model()
-
         try:
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
