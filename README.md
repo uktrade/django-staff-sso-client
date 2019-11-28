@@ -9,12 +9,32 @@
 
 A Django client for `staff-sso`
 
-As of Version 4, users are looked up by username field instead of email field
 
 ## Requirements
 
 [Python 3.6](https://www.python.org/downloads/release/python-368/)
+
 [Django>=1.11](https://www.djangoproject.com/)
+
+## Upgrade to version 1.0.0 considerations
+
+From version `1.0.0` the backend populates `User.USERNAME_FIELD` with the `user_id` rather than the `email`. This is
+to solve a bug affecting users with multiple email addresses.
+If `MIGRATE_EMAIL_USER_ON_LOGIN` is `True`, the authentication backend tries to migrate existing users.
+It is recommended to turn `MIGRATE_EMAIL_USER_ON_LOGIN` to `False` if not needed or when all the users are migrated to avoid 
+double database calls.
+
+### What happens if two email based users are migrated to user_id?
+Imagine the scenario where Testo Useri has two different email based accounts:
+
+1) testo.user@foo.com
+2) testo_user@bar.com
+
+As soon as they login with the first one, the account is converted to `user_id`.
+If they try to login with the second one, the authentication backends cannot convert the account because an account with the
+same `user_id` already exists.
+The authentication backends will raise an exception, **this is intended behaviour**.
+ 
 
 ## Installation
 
