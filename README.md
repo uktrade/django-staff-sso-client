@@ -21,7 +21,7 @@ A Django client for `staff-sso`
 From version `1.0.0` the backend populates `User.USERNAME_FIELD` with the `user_id` rather than the `email`. This is
 to solve a bug affecting users with multiple email addresses.
 If `MIGRATE_EMAIL_USER_ON_LOGIN` is `True`, the authentication backend tries to migrate existing users.
-It is recommended to turn `MIGRATE_EMAIL_USER_ON_LOGIN` to `False` if not needed or when all the users are migrated to avoid 
+It is recommended to turn `MIGRATE_EMAIL_USER_ON_LOGIN` to `False` (defaults to `False`) if not needed or when all the users are migrated to avoid 
 double database calls.
 
 ### What happens if two email based users are migrated to user_id?
