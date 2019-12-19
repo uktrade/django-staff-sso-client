@@ -48,7 +48,6 @@ setup(
     install_requires=[
         'django>=1.11,<3',
         'requests_oauthlib',
-        'raven',
     ],
     extras_require={
         'test': [
@@ -62,7 +61,8 @@ setup(
             'wheel',
             'setuptools',
             'pytest-django',
-            'requests-mock'
+            'requests-mock',
+            'raven',
         ]
     }
 )

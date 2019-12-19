@@ -4,9 +4,13 @@ from django.http import HttpResponseBadRequest, HttpResponseServerError
 from django.conf import settings
 from django.contrib.auth import authenticate, login
 
-from raven.contrib.django.raven_compat.models import client
 from authbroker_client.utils import get_client, AUTHORISATION_URL, TOKEN_URL, \
     TOKEN_SESSION_KEY
+try:
+    from raven.contrib.django.raven_compat.models import client
+    capture_exception = client.captureException
+except ImportError:
+    from sentry_sdk import capture_exception
 
 
 class AuthView(RedirectView):
@@ -50,7 +54,7 @@ class AuthCallbackView(View):
         # an exception. However, looking at the fetch_code method, I'm not entirely sure what exceptions it
         # would raise in this instance.
         except BaseException:
-            client.captureException()
+            capture_exception()
 
         # create the user
         user = authenticate(request)
