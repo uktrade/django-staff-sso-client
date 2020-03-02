@@ -14,7 +14,20 @@ A Django client for `staff-sso`
 
 [Python 3.6](https://www.python.org/downloads/release/python-368/)
 
-[Django>=1.11](https://www.djangoproject.com/)
+[Django>=2.22](https://www.djangoproject.com/)
+
+Version 2+ of this package drops support for Django version below 2.22.
+
+For Django versions `1.11 <= Django < 2.22` install v1.0.1:
+
+`pip install django-staff-sso-client==1.0.1`
+
+This client assumes your app  has either `raven` or `sentry_sdk` installed
+
+[Raven Python](https://github.com/getsentry/raven-python)
+
+[Sentry SDK](https://github.com/getsentry/sentry-python)
+
 
 ## Upgrade to version 1.0.0 considerations
 
