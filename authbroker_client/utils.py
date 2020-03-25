@@ -14,7 +14,7 @@ INTROSPECT_URL = urljoin(settings.AUTHBROKER_URL, 'o/introspect/')
 TOKEN_URL = urljoin(settings.AUTHBROKER_URL, '/o/token/')
 AUTHORISATION_URL = urljoin(settings.AUTHBROKER_URL, '/o/authorize/')
 TOKEN_CHECK_PERIOD_SECONDS = 60
-SCOPE = 'read write'
+SCOPE = settings.get('STAFF_SSO_SCOPE', 'read write')
 
 
 def get_client(request, **kwargs):
