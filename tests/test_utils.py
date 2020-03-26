@@ -84,7 +84,6 @@ def test_settings_override_scope(settings):
     new_scope = "read write data-hub:internal-front-end"
 
     settings.AUTHBROKER_STAFF_SSO_SCOPE = new_scope
-    print("settings.AUTHBROKER_STAFF_SSO_SCOPE", settings.AUTHBROKER_STAFF_SSO_SCOPE)
 
     mock_request = mock.Mock(session={"_authbroker_token": token})
     mock_request.build_absolute_uri.return_value = "https://test.com"
