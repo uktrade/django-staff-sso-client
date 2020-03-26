@@ -1,11 +1,18 @@
 # Changelog
 
+## [2.1.0](https://pypi.org/project/django-staff-sso-client/2.1.0/) (2020-03-25)
+[Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/18/files)
+
+**Implemented enhancements:**
+
+- No ticket - Add option to specify additional scope values
+
 ## [2.0.0](https://pypi.org/project/django-staff-sso-client/2.0.0/) (2020-03-03)
 [Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/16/files)
 
 **Fixed bugs:**
 
-- No ticket - Added support for Django 3.0.3 and dropped support 
+- No ticket - Added support for Django 3.0.3 and dropped support
 
 **Breaking changes:**
 

@@ -14,7 +14,6 @@ INTROSPECT_URL = urljoin(settings.AUTHBROKER_URL, 'o/introspect/')
 TOKEN_URL = urljoin(settings.AUTHBROKER_URL, '/o/token/')
 AUTHORISATION_URL = urljoin(settings.AUTHBROKER_URL, '/o/authorize/')
 TOKEN_CHECK_PERIOD_SECONDS = 60
-SCOPE = 'read write'
 
 
 def get_client(request, **kwargs):
@@ -24,9 +23,13 @@ def get_client(request, **kwargs):
     return OAuth2Session(
         settings.AUTHBROKER_CLIENT_ID,
         redirect_uri=redirect_uri,
-        scope=SCOPE,
+        scope=get_scope(),
         token=request.session.get(TOKEN_SESSION_KEY, None),
         **kwargs)
+
+
+def get_scope():
+    return getattr(settings, 'AUTHBROKER_STAFF_SSO_SCOPE', 'read write')
 
 
 def has_valid_token(client):

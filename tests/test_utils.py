@@ -5,8 +5,13 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from requests_oauthlib import OAuth2Session
 
-from authbroker_client.utils import get_profile, has_valid_token, get_client, \
-    SCOPE, authbroker_login_required
+from authbroker_client.utils import (
+    get_profile,
+    has_valid_token,
+    get_client,
+    get_scope,
+    authbroker_login_required,
+)
 
 
 def test_has_valid_token(mocked_oauth_client):
@@ -21,7 +26,7 @@ def test_get_profile():
             'access_token': 'eswfld123kjhn1v5423',
             'refresh_token': 'asdfkljh23490sdf',
             'token_type': 'Bearer',
-            'expires_in': '30'
+            'expires_in': '30',
         }
         mock_request = mock.Mock(session={'_authbroker_token': token})
         mock_request.build_absolute_uri.return_value = 'https://test.com'
@@ -34,13 +39,13 @@ def test_get_client():
         'access_token': 'eswfld123kjhn1v5423',
         'refresh_token': 'asdfkljh23490sdf',
         'token_type': 'Bearer',
-        'expires_in': '30'
+        'expires_in': '30',
     }
     mock_request = mock.Mock(session={'_authbroker_token': token})
     mock_request.build_absolute_uri.return_value = 'https://test.com'
     client = get_client(request=mock_request)
     assert isinstance(client, OAuth2Session)
-    assert client.scope == SCOPE
+    assert client.scope == get_scope()
     assert client.client_id == settings.AUTHBROKER_CLIENT_ID
     assert client.token == token
 
@@ -66,3 +71,22 @@ def test_authbroker_login_required_not_allowed_decorator(mocked_has_valid_token)
     assert response.status_code == 302
     assert response.url == '/auth/login/'
     assert isinstance(response, HttpResponseRedirect)
+
+
+def test_settings_override_scope(settings):
+    token = {
+        'access_token': 'eswfld123kjhn1v5423',
+        'refresh_token': 'asdfkljh23490sdf',
+        'token_type': 'Bearer',
+        'expires_in': '30',
+    }
+
+    new_scope = 'read write data-hub:internal-front-end'
+
+    settings.AUTHBROKER_STAFF_SSO_SCOPE = new_scope
+
+    mock_request = mock.Mock(session={'_authbroker_token': token})
+    mock_request.build_absolute_uri.return_value = 'https://test.com'
+    client = get_client(request=mock_request,)
+    assert isinstance(client, OAuth2Session)
+    assert client.scope == new_scope

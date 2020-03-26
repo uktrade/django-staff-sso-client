@@ -31,6 +31,7 @@ LOGIN_REDIRECT_URL = 'home'
 AUTHBROKER_URL = 'https://test.com'
 AUTHBROKER_CLIENT_ID = 'debug'
 AUTHBROKER_CLIENT_SECRET = 'debug'
+AUTHBROKER_STAFF_SSO_SCOPE = 'additional-scope'
 
 TEMPLATES = [
     {
