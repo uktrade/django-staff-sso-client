@@ -69,7 +69,7 @@ INSTALLED_APPS=[
 AUTHBROKER_URL = 'speak-to-webops-team-for-access'
 AUTHBROKER_CLIENT_ID = 'speak-to-webops-team-for-access'
 AUTHBROKER_CLIENT_SECRET = 'speak-to-webops-team-for-access'
-STAFF_SSO_SCOPE = 'any-additional-scope-values'
+AUTHBROKER_STAFF_SSO_SCOPE = 'any-additional-scope-values'
 ```
 
 Add the `'authbroker_client.backends.AuthbrokerBackend'` authentication backend, e.g:

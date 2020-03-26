@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.1](https://pypi.org/project/django-staff-sso-client/2.0.1/) (2020-03-25)
+## [2.0.2](https://pypi.org/project/django-staff-sso-client/2.0.2/) (2020-03-25)
 [Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/18/files)
 
 **Implemented enhancements:**
