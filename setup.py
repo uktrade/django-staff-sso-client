@@ -47,6 +47,8 @@ setup(
         'Django>=2.2,<4',
         'requests_oauthlib',
     ],
+    # pinning pytest because pytest-sugar doesn't work with pytest v5.4.0
+    # https://github.com/Teemu/pytest-sugar/issues/187
     extras_require={
         'test': [
             'pytest==5.3.5',
