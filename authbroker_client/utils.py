@@ -27,8 +27,10 @@ def get_client(request, **kwargs):
         token=request.session.get(TOKEN_SESSION_KEY, None),
         **kwargs)
 
+
 def get_scope():
     return getattr(settings, 'AUTHBROKER_STAFF_SSO_SCOPE', 'read write')
+
 
 def has_valid_token(client):
     """Does the session have a valid token?"""
