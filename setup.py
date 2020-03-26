@@ -49,7 +49,7 @@ setup(
     ],
     extras_require={
         'test': [
-            'pytest',
+            'pytest==5.3.5',
             'pytest-cov',
             'pytest-sugar',
             'flake8==3.0.4',
