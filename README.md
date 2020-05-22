@@ -119,6 +119,22 @@ MIDDLEWARE = [
 
 if you do like to use admin interface  in your app, when using this module, you will also need to install and configure the [custom_usermodel](https://github.com/uktrade/django-staff-sso-usermodel).
 
+## Use with UKTrade mock-sso package
+
+It is possible to configure this package to work with the [mock-sso service](https://github.com/uktrade/mock-sso).
+
+Mock SSO requires that you provide a non-standard parameter in the query string of the initial GET call of the OAuth flow. (See the [mock-sso docs](https://github.com/uktrade/mock-sso/blob/master/README.md) for more detail.)
+
+This parameter is called `code`. Any services which use THIS library (django-mock-sso-client) could need to undertake automated tests of a stack which uses Staff SSO for downstream components (example: testing an app which in return requires access to another service's API, both of which use SSO for authentication).
+
+For circumstances like these you will need to prime mock-sso with this `code` parameter.
+
+This is achieved by changing the Django settings for the app which is importing THIS library. In those settings, add:
+```
+TEST_SSO_PROVIDER_SET_RETURNED_ACCESS_TOKEN = 'someCode'
+```
+where 'someCode' will then be provided as the 'access token' during the OAuth callback to mock-sso. (Again, see the [mock-sso docs](https://github.com/uktrade/mock-sso/blob/master/README.md) for more detail.)
+
 ## TODO:
 
 * ensure has_valid_token() checks with `staff-sso` after grace period (e.g. 1 minute)
