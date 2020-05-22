@@ -22,7 +22,11 @@ class AuthView(RedirectView):
 
         # Allow for compatibility with https://github.com/uktrade/mock-sso
         # during testing. See tests/settings.py for details.
-        test_sso_token = settings.TEST_SSO_PROVIDER_SET_RETURNED_ACCESS_TOKEN
+        test_sso_token = getattr(
+            settings,
+            'TEST_SSO_PROVIDER_SET_RETURNED_ACCESS_TOKEN',
+            None,
+        )
         if test_sso_token:
             auth_url_extra_kwargs['code'] = test_sso_token
 
