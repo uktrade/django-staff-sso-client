@@ -18,7 +18,22 @@ class AuthView(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
 
-        authorization_url, state = get_client(self.request).authorization_url(AUTHORISATION_URL)
+        auth_url_extra_kwargs = {}
+
+        # Allow for compatibility with https://github.com/uktrade/mock-sso
+        # during testing. See tests/settings.py for details.
+        test_sso_token = getattr(
+            settings,
+            'TEST_SSO_PROVIDER_SET_RETURNED_ACCESS_TOKEN',
+            None,
+        )
+        if test_sso_token:
+            auth_url_extra_kwargs['code'] = test_sso_token
+
+        authorization_url, state = get_client(self.request).authorization_url(
+            AUTHORISATION_URL,
+            **auth_url_extra_kwargs,
+        )
 
         self.request.session[TOKEN_SESSION_KEY + '_oauth_state'] = state
 
