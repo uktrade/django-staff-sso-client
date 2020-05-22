@@ -13,6 +13,15 @@ def test_auth_view(client):
     response = client.get(url)
     assert response.status_code == 302
     assert AUTHORISATION_URL in response.url
+    assert 'code=someCode' not in response.url
+
+
+@pytest.mark.django_db
+def test_set_access_token_in_mock_sso(client, settings):
+    settings.TEST_SSO_PROVIDER_SET_RETURNED_ACCESS_TOKEN = 'someCode'
+    url = reverse('authbroker:login')
+    response = client.get(url)
+    assert 'code=someCode' in response.url
 
 
 @pytest.mark.django_db
