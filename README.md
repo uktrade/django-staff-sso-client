@@ -70,6 +70,7 @@ AUTHBROKER_URL = 'speak-to-webops-team-for-access'
 AUTHBROKER_CLIENT_ID = 'speak-to-webops-team-for-access'
 AUTHBROKER_CLIENT_SECRET = 'speak-to-webops-team-for-access'
 AUTHBROKER_STAFF_SSO_SCOPE = 'any-additional-scope-values'
+AUTHBROKER_ANONYMOUS_PATHS = (Tuple/list of paths that should be unprotected)
 ```
 
 Add the `'authbroker_client.backends.AuthbrokerBackend'` authentication backend, e.g:
