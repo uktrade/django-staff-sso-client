@@ -13,40 +13,38 @@ class AuthbrokerBackend:
         client = get_client(request)
         if has_valid_token(client):
             profile = get_profile(client)
-            if getattr(settings, 'MIGRATE_EMAIL_USER_ON_LOGIN', False):
-                if self.user_email_exists(profile):
-                    user = self.migrate_username_from_email_to_id(profile)
-                else:
-                    user = self.get_or_create_user(profile)
-            else:
-                user = self.get_or_create_user(profile)
-            return user
+            return self.get_or_create_user(profile)
         return None
 
-    @staticmethod
-    def user_email_exists(profile):
-        return UserModel.objects.filter(**{UserModel.USERNAME_FIELD: profile['email']}).exists()
+    def get_or_create_user(self, profile):
+        id_key = self.get_profile_id_name()
 
-    @staticmethod
-    def migrate_username_from_email_to_id(profile):
-        user = UserModel.objects.get(**{UserModel.USERNAME_FIELD: profile['email']})
-        setattr(user, UserModel.USERNAME_FIELD, profile['user_id'])
-        user.save()
-        return user
-
-    @staticmethod
-    def get_or_create_user(profile):
         user, created = UserModel.objects.get_or_create(
-            **{UserModel.USERNAME_FIELD: profile['user_id']},
-            defaults={
-                'email': profile['email'],
-                'first_name': profile['first_name'],
-                'last_name': profile['last_name']
-            })
+            **{UserModel.USERNAME_FIELD: profile[id_key]},
+            defaults=self.user_create_mapping(profile),
+        )
+
         if created:
             user.set_unusable_password()
             user.save()
         return user
+
+    def user_create_mapping(self, profile):
+        return {
+            'email': profile['email'],
+            'first_name': profile['first_name'],
+            'last_name': profile['last_name'],
+        }
+
+    @staticmethod
+    def get_profile_id_name():
+        """Return the key name for the ID field in the user profile.  This defaults to
+        `email_user_id`, with the option to set it to the `user_id`/guid field.
+        """
+        if getattr(settings, 'AUTHBROKER_USE_USER_ID_GUID', False):
+            return 'user_id'
+
+        return 'email_user_id'
 
     def get_user(self, user_id):
         User = get_user_model()
