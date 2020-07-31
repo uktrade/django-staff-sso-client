@@ -12,8 +12,9 @@ class ProtectAllViewsMiddleware:
             (),
         )
 
-    def __call__(self, request):
-        if (request.path not in
+    def __call__(self, request):  #noqa W504
+        if (
+            request.path not in
             self.anonymous_paths and
             resolve(request.path).app_name != 'authbroker_client' and not
             request.user.is_authenticated
