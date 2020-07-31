@@ -15,9 +15,8 @@ class ProtectAllViewsMiddleware:
     def __call__(self, request):
         print("hello")
         print("request.path", request.path)
-        assert False
         if (
-            str(resolve(request.path)) not in self.anonymous_paths and
+            request.path not in self.anonymous_paths and
             resolve(request.path).app_name != 'authbroker_client' and not
             request.user.is_authenticated
         ):
