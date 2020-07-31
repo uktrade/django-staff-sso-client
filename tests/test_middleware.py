@@ -2,8 +2,8 @@ from unittest import mock
 
 import pytest
 
-from django.contrib.auth.models import AnonymousUser, User
-from django.test import TestCase, Client
+from django.contrib.auth.models import AnonymousUser
+from django.test import TestCase
 from django.test.client import RequestFactory
 
 from authbroker_client.middleware import ProtectAllViewsMiddleware
@@ -36,4 +36,3 @@ class AnonymousUserAccessibilityTests(TestCase):
         outcome = middleware(request=self.request)
         assert not redirect.called
         assert outcome
-

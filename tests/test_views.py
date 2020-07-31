@@ -48,11 +48,3 @@ def test_callback_view_token(mocked_get_client, rf):
     request.GET = {'code': 'foo'}
     response = AuthCallbackView.as_view()(request)
     assert response.status_code == 302
-
-# def test_anonymous_path_view(client):
-#
-#     url = reverse('authbroker:login')
-#     response = client.get(url)
-#     assert response.status_code == 302
-#     assert AUTHORISATION_URL in response.url
-#     assert 'code=someCode' not in response.url
