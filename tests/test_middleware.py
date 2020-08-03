@@ -11,7 +11,7 @@ from authbroker_client.middleware import ProtectAllViewsMiddleware
 
 
 def get_response_fake(request):
-    return True
+    return "the-public-view"
 
 
 @pytest.mark.django_db
@@ -34,7 +34,7 @@ class AnonymousUserAccessibilityTests(TestCase):
     @mock.patch('authbroker_client.middleware.redirect')
     def test_anonymous_path(self, redirect, settings):
         middleware = ProtectAllViewsMiddleware(get_response=get_response_fake)
+        response = middleware(request=self.request)
 
-        outcome = middleware(request=self.request)
         assert not redirect.called
-        assert outcome
+        assert response == "the-public-view"
