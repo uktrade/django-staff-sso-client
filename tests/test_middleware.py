@@ -4,7 +4,7 @@ import pytest
 
 from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
-from django.test.client import RequestFactory, Client
+from django.test.client import RequestFactory
 from django.urls import reverse
 
 from authbroker_client.middleware import ProtectAllViewsMiddleware
