@@ -120,6 +120,13 @@ MIDDLEWARE = [
 
 if you do like to use admin interface  in your app, when using this module, you will also need to install and configure the [custom_usermodel](https://github.com/uktrade/django-staff-sso-usermodel).
 
+### Exclude page from SSO Auth check
+
+In order to allow anonymous access to a page on a site protected using this client, add the following setting to your Django settings file:
+
+```
+AUTHBROKER_ANONYMOUS_PATHS = ('anonymous/path',)
+```
 ## Use with UKTrade mock-sso package
 
 It is possible to configure this package to work with the [mock-sso service](https://github.com/uktrade/mock-sso).
