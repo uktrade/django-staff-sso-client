@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://pypi.org/project/django-staff-sso-client/3.0.0/) (2020-08-24)
+[Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/22/files)
+
+**Implemented enhancements:**
+
+- The default ID field has been changed to `email_user_id` [previously the `user_id` UUID field was the default]
+
+- There is now an option to change the profile -> user instance field mapping on user creation.
+
+- `MIGRATE_EMAIL_USER_ON_LOGIN` logic has been removed.
+
 ## [2.1.0](https://pypi.org/project/django-staff-sso-client/2.1.0/) (2020-03-25)
 [Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/18/files)
 

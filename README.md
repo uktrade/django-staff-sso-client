@@ -29,25 +29,11 @@ This client assumes your app  has either `raven` or `sentry_sdk` installed
 [Sentry SDK](https://github.com/getsentry/sentry-python)
 
 
-## Upgrade to version 1.0.0 considerations
+## Upgrade to version 3.0.0 considerations
 
-From version `1.0.0` the backend populates `User.USERNAME_FIELD` with the `user_id` rather than the `email`. This is
-to solve a bug affecting users with multiple email addresses.
-If `MIGRATE_EMAIL_USER_ON_LOGIN` is `True`, the authentication backend tries to migrate existing users.
-It is recommended to turn `MIGRATE_EMAIL_USER_ON_LOGIN` to `False` (defaults to `False`) if not needed or when all the users are migrated to avoid 
-double database calls.
+The default ID field has been changed to `email_user_id`. Previously the `user_id` (guid) was the default field - see below for details on how to revert to `user_id` if needed.
 
-### What happens if two email based users are migrated to user_id?
-Imagine the scenario where Testo Useri has two different email based accounts:
-
-1) testo.user@foo.com
-2) testo_user@bar.com
-
-As soon as they login with the first one, the account is converted to `user_id`.
-If they try to login with the second one, the authentication backends cannot convert the account because an account with the
-same `user_id` already exists.
-The authentication backends will raise an exception, **this is intended behaviour**.
- 
+`MIGRATE_EMAIL_USER_ON_LOGIN` logic has been removed.
 
 ## Installation
 
@@ -118,7 +104,69 @@ MIDDLEWARE = [
 ]
 ```
 
-if you do like to use admin interface  in your app, when using this module, you will also need to install and configure the [custom_usermodel](https://github.com/uktrade/django-staff-sso-usermodel).
+## Change the default user id field
+
+Staff-sso maintains two unique user ids for each user: the `email_user_id` field, which is in an email format [NOTE: it is purely a unique id, not a valid email address] and the `user_id` field, which is a GUID.  By default (from version 3.0.0 onwards) django-staff-sso-client identifies users based on the `email_user_id` field.  This is the preferred option for most cases.  If however, you need to use the `user_id` field, then add this to your settings.py file:
+
+```
+AUTHBROKER_USE_USER_ID_GUID = True
+```
+
+When creating new users django-staff-sso-client attempts to store the user id in the `User.USERNAME_FIELD` field.  With the stock django model this will be the `username` field.  If you use a custom user model you can override this field as needed, for example:
+
+```
+class YourCustomUserModel(...):
+  USERNAME_FIELD = 'sso_email_id'
+```
+
+NOTE: As per django's documentation, the `USERNAME_FIELD` should be the user model's primary key.
+
+## Change the user creation mapping
+
+Here's an example staff-sso profile, which is available at the point of user creation:
+
+```
+{
+    'user_id': '6fa3b542-9a6f-4fc3-a248-168596572999',   
+    'email_user_id': 'john.smith-6fa3b542@id.trade.gov.uk',    
+    'email': 'john.smith@someplace.gov.uk',
+    'contact_email': 'john.smith@someemail.com',
+    'related_emails': [   'jsmith@someotherplace.com',
+                          'me@johnsmith.com'],  
+    'first_name': 'John',
+    'last_name': 'Smith',                
+    'groups': [ ... ],                    
+    'permitted_applications': [ ... ],
+    'access_profiles': [ ... ]
+}
+```
+
+The default mapping is:
+
+```
+{
+      'email': profile['email'],
+      'first_name': profile['first_name'],
+      'last_name': profile['last_name'],
+}
+```
+
+You can change this default mapping by subclassing the authentication backend `authbroker_client.backends.AuthbrokerBackend` and overriding the `user_create_mapping` method.
+
+Here's an example:
+
+```
+from authbroker_client.backends import AuthbrokerBackend
+
+
+class CustomAuthbrokerBackend(AuthbrokerBackend):
+    def user_create_mapping(self, profile):
+        return {
+            "is_active": True,
+            "first_name": profile["first_name"],
+            "last_name": profile["last_name"],
+        }
+```
 
 ### Exclude page from SSO Auth check
 
@@ -142,8 +190,3 @@ This is achieved by changing the Django settings for the app which is importing 
 TEST_SSO_PROVIDER_SET_RETURNED_ACCESS_TOKEN = 'someCode'
 ```
 where 'someCode' will then be provided as the 'access token' during the OAuth callback to mock-sso. (Again, see the [mock-sso docs](https://github.com/uktrade/mock-sso/blob/master/README.md) for more detail.)
-
-## TODO:
-
-* ensure has_valid_token() checks with `staff-sso` after grace period (e.g. 1 minute)
-* improve exception handling logic in `authbroker_client/views.py`
