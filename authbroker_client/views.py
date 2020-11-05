@@ -1,3 +1,5 @@
+import logging
+
 from django.views.generic.base import RedirectView, View
 from django.shortcuts import redirect
 from django.http import HttpResponseBadRequest, HttpResponseServerError
@@ -76,5 +78,10 @@ class AuthCallbackView(View):
 
         if user is not None:
             login(request, user)
+
+        else:
+            logging.getLogger(__name__).warn(
+                f'Failed authenticating user for given auth code "{auth_code}"'
+            )
 
         return redirect(getattr(settings, 'LOGIN_REDIRECT_URL', '/'))
