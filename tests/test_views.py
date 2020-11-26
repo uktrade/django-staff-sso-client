@@ -22,9 +22,15 @@ def test_auth_view_retains_next_url(client):
     url = reverse('authbroker:login') + '?next=/go-here-after-logging-in/'
     response = client.get(url)
     assert response.status_code == 302
-    assert AUTHORISATION_URL in response.url
-    assert 'code=someCode' not in response.url
     assert client.session[REDIRECT_SESSION_FIELD_NAME] == '/go-here-after-logging-in/'
+
+
+@pytest.mark.django_db
+def test_auth_view_retains_unsafe_next_url(client):
+    url = reverse('authbroker:login') + '?next=https://danger.com'
+    response = client.get(url)
+    assert response.status_code == 302
+    assert not client.session[REDIRECT_SESSION_FIELD_NAME]
 
 
 @pytest.mark.django_db
@@ -76,3 +82,19 @@ def test_callback_view_token_with_next_url(mocked_get_client, rf):
     response = AuthCallbackView.as_view()(request)
     assert response.status_code == 302
     assert response.url == '/go-here-after-authenticating/'
+
+
+@pytest.mark.django_db
+@mock.patch('authbroker_client.views.get_client')
+def test_callback_view_token_with_unsafe_next_url(mocked_get_client, rf):
+    mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
+    url = reverse('authbroker:callback')
+    request = rf.get(url)
+    request.session = {
+        f'{TOKEN_SESSION_KEY}_oauth_state': 'state',
+        REDIRECT_SESSION_FIELD_NAME: 'https://danger.com/'
+    }
+    request.GET = {'code': 'foo'}
+    response = AuthCallbackView.as_view()(request)
+    assert response.status_code == 302
+    assert response.url == '/'

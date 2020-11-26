@@ -29,7 +29,7 @@ def get_next_url(request):
         REDIRECT_FIELD_NAME,
         request.session.get(REDIRECT_SESSION_FIELD_NAME)
     )
-    if next_url and is_safe_url(next_url, allowed_hosts=settings.ALLOWED_HOSTS):
+    if next_url and is_safe_url(next_url, allowed_hosts=settings.ALLOWED_HOSTS, require_https=request.is_secure()):
         return next_url
 
     return None
