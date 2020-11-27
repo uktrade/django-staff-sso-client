@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://pypi.org/project/django-staff-sso-client/3.0.0/) (2020-08-24)
+[Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/22/files)
+
+**Implemented enhancements**
+
+- Corretly handle the ?next= querystring paramer and redirect to it, after the user authenticates 
+
 ## [3.0.0](https://pypi.org/project/django-staff-sso-client/3.0.0/) (2020-08-24)
 [Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/22/files)
 

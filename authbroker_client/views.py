@@ -2,22 +2,44 @@ from django.views.generic.base import RedirectView, View
 from django.shortcuts import redirect
 from django.http import HttpResponseBadRequest, HttpResponseServerError
 from django.conf import settings
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, REDIRECT_FIELD_NAME
+from django.utils.http import is_safe_url
 
-from authbroker_client.utils import get_client, AUTHORISATION_URL, TOKEN_URL, \
-    TOKEN_SESSION_KEY
+from authbroker_client.utils import (
+    get_client,
+    AUTHORISATION_URL,
+    TOKEN_URL,
+    TOKEN_SESSION_KEY,
+)
+
+
+REDIRECT_SESSION_FIELD_NAME = f"_oauth2_{REDIRECT_FIELD_NAME}"
+
+
 try:
     from raven.contrib.django.raven_compat.models import client
+
     capture_exception = client.captureException
 except ImportError:
     from sentry_sdk import capture_exception
+
+
+def get_next_url(request):
+    next_url = request.GET.get(
+        REDIRECT_FIELD_NAME,
+        request.session.get(REDIRECT_SESSION_FIELD_NAME)
+    )
+    if next_url and is_safe_url(next_url, allowed_hosts=settings.ALLOWED_HOSTS, require_https=request.is_secure()):
+        return next_url
+
+    return None
 
 
 class AuthView(RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
-
+        """Redirect to staff-sso"""
         auth_url_extra_kwargs = {}
 
         # Allow for compatibility with https://github.com/uktrade/mock-sso
@@ -35,6 +57,7 @@ class AuthView(RedirectView):
             **auth_url_extra_kwargs,
         )
 
+        self.request.session[REDIRECT_SESSION_FIELD_NAME] = get_next_url(self.request)
         self.request.session[TOKEN_SESSION_KEY + '_oauth_state'] = state
 
         return authorization_url
@@ -55,9 +78,8 @@ class AuthCallbackView(View):
 
         try:
             token = get_client(self.request).fetch_token(
-                TOKEN_URL,
-                client_secret=settings.AUTHBROKER_CLIENT_SECRET,
-                code=auth_code)
+                TOKEN_URL, client_secret=settings.AUTHBROKER_CLIENT_SECRET, code=auth_code
+            )
 
             self.request.session[TOKEN_SESSION_KEY] = dict(token)
 
@@ -77,4 +99,6 @@ class AuthCallbackView(View):
         if user is not None:
             login(request, user)
 
-        return redirect(getattr(settings, 'LOGIN_REDIRECT_URL', '/'))
+        next_url = get_next_url(request) or getattr(settings, 'LOGIN_REDIRECT_URL', '/')
+
+        return redirect(next_url)

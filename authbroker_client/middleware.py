@@ -1,6 +1,9 @@
+from urllib.parse import urlencode
+
 from django.conf import settings
+from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.shortcuts import redirect
-from django.urls import resolve
+from django.urls import resolve, reverse
 
 
 class ProtectAllViewsMiddleware:
@@ -12,13 +15,25 @@ class ProtectAllViewsMiddleware:
             (),
         )
 
+    @staticmethod
+    def get_redirect_url(request):
+        params = {
+            REDIRECT_FIELD_NAME: request.get_full_path(),
+        }
+
+        querystring = urlencode(params)
+
+        redirect_url = reverse('authbroker_client:login')
+
+        return redirect(f"{redirect_url}?{querystring}")
+
     def __call__(self, request):
         if (
-            request.path not in self.anonymous_paths and  # noqa W504
-            resolve(request.path).app_name != 'authbroker_client' and not
-            request.user.is_authenticated
+            request.path not in self.anonymous_paths
+            and resolve(request.path).app_name != "authbroker_client"  # noqa: W503
+            and not request.user.is_authenticated  # noqa: W503
         ):
-            return redirect('authbroker_client:login')
+            return self.get_redirect_url(request)
 
         response = self.get_response(request)
         return response

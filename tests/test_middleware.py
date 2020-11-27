@@ -5,7 +5,6 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.urls import reverse
 
 from authbroker_client.middleware import ProtectAllViewsMiddleware
 
@@ -15,7 +14,7 @@ def get_response_fake(request):
 
 
 @pytest.mark.django_db
-class AnonymousUserAccessibilityTests(TestCase):
+class ProtectAllViewsMiddelwareTestCase(TestCase):
     def setUp(self):
         factory = RequestFactory()
         self.request = factory.get("/")
@@ -27,8 +26,8 @@ class AnonymousUserAccessibilityTests(TestCase):
 
         response = middleware(request=self.request)
         assert response.status_code == 302
-        url = reverse("authbroker_client:login")
-        assert response.url == url
+
+        assert response.url == "/auth/login/?next=%2F"
 
     @mock.patch('authbroker_client.middleware.settings', AUTHBROKER_ANONYMOUS_PATHS=("/",))
     @mock.patch('authbroker_client.middleware.redirect')
