@@ -1,7 +1,8 @@
 import functools
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import redirect
 from django.urls import reverse
 
@@ -14,6 +15,16 @@ INTROSPECT_URL = urljoin(settings.AUTHBROKER_URL, 'o/introspect/')
 TOKEN_URL = urljoin(settings.AUTHBROKER_URL, '/o/token/')
 AUTHORISATION_URL = urljoin(settings.AUTHBROKER_URL, '/o/authorize/')
 TOKEN_CHECK_PERIOD_SECONDS = 60
+
+
+def check_config():
+    """
+    Sanity check settings.
+    """
+    if not urlparse(AUTHORISATION_URL).scheme:
+        # Not having a protocol means when urljoin is used later in the code the first part of the URL is discarded
+        # leading to the suprising effect that auth urls redirect to localhost not the remote SSO.
+        raise ImproperlyConfigured("AUTHBROKER_URL must start with protocol, e.g. https://")
 
 
 def get_client(request, **kwargs):
@@ -54,3 +65,6 @@ def authbroker_login_required(func):
 
         return func(request)
     return decorated
+
+
+check_config()
