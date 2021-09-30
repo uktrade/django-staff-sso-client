@@ -1,6 +1,13 @@
 # Changelog
 
-## [3.1.0](https://pypi.org/project/django-staff-sso-client/3.0.0/) (2020-08-24)
+## [3.1.1](https://pypi.org/project/django-staff-sso-client/3.1.1/) (2021-09-30)
+[Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/26/files)
+
+**Implemented enhancements**
+
+- Include the source distribution when uploading to pypi 
+
+## [3.1.0](https://pypi.org/project/django-staff-sso-client/3.1.0/) (2020-08-24)
 [Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/22/files)
 
 **Implemented enhancements**

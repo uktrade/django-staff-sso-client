@@ -17,6 +17,7 @@ pytest:
 publish:
 	rm -rf build dist; \
 	python setup.py bdist_wheel; \
+	python setup.py sdist; \
 	twine upload --username $$PYPI_USERNAME --password $$PYPI_PASSWORD dist/*
 
 .PHONY: build clean test_requirements flake8 pytest test publish
