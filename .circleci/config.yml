@@ -2,7 +2,7 @@ version: 2
 jobs:
   test_django3:
     docker:
-      - image: circleci/python:3.6.8
+      - image: cimg/python:3.6.15
     steps:
       - checkout
       - run:
@@ -20,7 +20,7 @@ jobs:
             codecov
   test_django2:
     docker:
-      - image: circleci/python:3.6.8
+      - image: cimg/python:3.6.15
     steps:
       - checkout
       - run:
@@ -38,7 +38,7 @@ jobs:
 
   flake8:
     docker:
-    - image: circleci/python:3.6.8
+    - image: cimg/python:3.6.15
     steps:
     - checkout
     - run:
@@ -51,7 +51,7 @@ jobs:
 
   publish_to_pypi:
     docker:
-    - image: circleci/python:3.6.8
+    - image: cimg/python:3.6.15
     steps:
     - checkout
     - run:
