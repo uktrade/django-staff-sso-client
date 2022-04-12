@@ -55,6 +55,7 @@ setup(
             'flake8==4.0.1',
             'requests_mock',
             'codecov',
+            'build',
             'twine',
             'wheel',
             'setuptools',
