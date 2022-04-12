@@ -36,31 +36,28 @@ setup(
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Framework :: Django',
-        'Framework :: Django :: 2.2',
         'Framework :: Django :: 3.0',
+        'Framework :: Django :: 4.0',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
-        'Django>=2.2,<4',
+        'Django>=3.0,<4.1',
         'requests_oauthlib',
     ],
-    # pinning pytest because pytest-sugar doesn't work with pytest v5.4.0
-    # https://github.com/Teemu/pytest-sugar/issues/187
     extras_require={
         'test': [
-            'pytest==5.3.5',
+            'pytest==7.1.1',
             'pytest-cov',
-            'pytest-sugar',
-            'flake8==3.0.4',
+            'pytest-django',
+            'flake8==4.0.1',
             'requests_mock',
             'codecov',
             'twine',
             'wheel',
             'setuptools',
-            'pytest-django',
             'requests-mock',
             'raven',
         ]

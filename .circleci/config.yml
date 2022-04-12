@@ -2,7 +2,7 @@ version: 2
 jobs:
   test_django3:
     docker:
-      - image: cimg/python:3.6.15
+      - image: cimg/python:3.10.4
     steps:
       - checkout
       - run:
@@ -10,18 +10,19 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install --upgrade pip
+            pip install --upgrade --no-cache-dir pip
             make test_requirements
-            pip install django==3.0.3
+            pip install --no-cache-dir django==3.2.13
       - run:
           name: Run tests
           command: |
             . venv/bin/activate
             make pytest
             codecov
-  test_django2:
+
+  test_django4:
     docker:
-      - image: cimg/python:3.6.15
+      - image: cimg/python:3.10.4
     steps:
       - checkout
       - run:
@@ -29,7 +30,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install --upgrade pip
+            pip install --upgrade --no-cache-dir pip
             make test_requirements
       - run:
           name: Run tests
@@ -40,41 +41,41 @@ jobs:
 
   flake8:
     docker:
-    - image: cimg/python:3.6.15
+      - image: cimg/python:3.10.4
     steps:
-    - checkout
-    - run:
-        name: Run flake8
-        command: |
-          python3 -m venv venv
-          . venv/bin/activate
-          pip install flake8
-          flake8 . --exclude=venv
+      - checkout
+      - run:
+          name: Run flake8
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install --no-cache-dir flake8
+            flake8 . --exclude=venv
 
   publish_to_pypi:
     docker:
-    - image: cimg/python:3.6.15
+      - image: cimg/python:3.10.4
     steps:
-    - checkout
-    - run:
-        command: |
-          python3 -m venv .venv
-          . .venv/bin/activate
-          pip install --upgrade pip
-          make test_requirements
-          make publish
+      - checkout
+      - run:
+          command: |
+            python3 -m venv .venv
+            . .venv/bin/activate
+            pip install --upgrade --no-cache-dir pip
+            make test_requirements
+            make publish
 
 workflows:
   version: 2
   test_and_publish_to_pypi:
     jobs:
       - test_django3
-      - test_django2
+      - test_django4
       - flake8
       - publish_to_pypi:
           requires:
-          - test_django3
-          - test_django2
+            - test_django3
+            - test_django4
           filters:
             branches:
               only: master

@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.http import HttpResponseBadRequest, HttpResponseServerError
 from django.conf import settings
 from django.contrib.auth import authenticate, login, REDIRECT_FIELD_NAME
-from django.utils.http import is_safe_url
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from authbroker_client.utils import (
     get_client,
@@ -29,7 +29,9 @@ def get_next_url(request):
         REDIRECT_FIELD_NAME,
         request.session.get(REDIRECT_SESSION_FIELD_NAME)
     )
-    if next_url and is_safe_url(next_url, allowed_hosts=settings.ALLOWED_HOSTS, require_https=request.is_secure()):
+    if next_url and url_has_allowed_host_and_scheme(
+        next_url, allowed_hosts=settings.ALLOWED_HOSTS, require_https=request.is_secure()
+    ):
         return next_url
 
     return None

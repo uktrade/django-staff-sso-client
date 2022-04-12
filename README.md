@@ -12,13 +12,19 @@ A Django client for `staff-sso`
 
 ## Requirements
 
-[Python 3.6](https://www.python.org/downloads/release/python-368/)
+[Python 3.7](https://www.python.org/downloads/release/python-370/)
 
-[Django>=2.22](https://www.djangoproject.com/)
+[Django>=3.2](https://www.djangoproject.com/)
 
-Version 2+ of this package drops support for Django version below 2.22.
+Version 4+ of this package drops support for Django version 2.2.
 
-For Django versions `1.11 <= Django < 2.22` install v1.0.1:
+For Django versions `Django==2.2` install v3.1.1:
+
+`pip install django-staff-sso-client==3.1.1`
+
+Version 2+ of this package drops support for Django versions below 2.2.
+
+For Django versions `1.11 <= Django < 2.2` install v1.0.1:
 
 `pip install django-staff-sso-client==1.0.1`
 
