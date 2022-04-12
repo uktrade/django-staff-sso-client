@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.0.0](https://pypi.org/project/django-staff-sso-client/4.0.0/) (2022-04-12)
+
+**Implemented enhancements:**
+
+- Add support for Django 4
+- Add support for Python 3.10
+- Modernise how distributions are generated
+
+**Breaking changes:**
+
+- Dropped support for Django 2.2
+- Dropped support for Python 3.6
+
 ## [3.1.1](https://pypi.org/project/django-staff-sso-client/3.1.1/) (2021-09-30)
 [Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/26/files)
 
