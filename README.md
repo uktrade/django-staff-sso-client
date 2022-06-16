@@ -63,6 +63,7 @@ AUTHBROKER_CLIENT_ID = 'speak-to-webops-team-for-access'
 AUTHBROKER_CLIENT_SECRET = 'speak-to-webops-team-for-access'
 AUTHBROKER_STAFF_SSO_SCOPE = 'any-additional-scope-values'
 AUTHBROKER_ANONYMOUS_PATHS = (Tuple/list of paths that should be unprotected)
+AUTHBROKER_ANONYMOUS_URL_NAMES = (list of url names that should be unprotected)
 ```
 
 Add the `'authbroker_client.backends.AuthbrokerBackend'` authentication backend, e.g:
@@ -181,6 +182,12 @@ In order to allow anonymous access to a page on a site protected using this clie
 ```
 AUTHBROKER_ANONYMOUS_PATHS = ('anonymous/path',)
 ```
+
+Alternatively, you can use the `AUTHBROKER_ANONYMOUS_URL_NAMES` setting to specify a list of url names.
+```
+AUTHBROKER_ANONYMOUS_URL_NAMES = ('url-name',)
+```
+
 ## Use with UKTrade mock-sso package
 
 It is possible to configure this package to work with the [mock-sso service](https://github.com/uktrade/mock-sso).
