@@ -33,7 +33,7 @@ class ProtectAllViewsMiddleware:
         return redirect(f"{redirect_url}?{querystring}")
 
     def __call__(self, request):
-        if not request.user.is_authenticated:  # noqa: W503
+        if not request.user.is_authenticated:
             resolved_path = resolve(request.path)
             is_anonymous_path = request.path in self.anonymous_paths
             is_anonymous_url_name = resolved_path.url_name in self.anonymous_url_names
@@ -42,7 +42,7 @@ class ProtectAllViewsMiddleware:
             if (
                 not is_anonymous_path
                 and not is_anonymous_url_name
-                and not is_authbroker_client_path  # noqa: W503
+                and not is_authbroker_client_path
             ):
                 return self.get_redirect_url(request)
 
