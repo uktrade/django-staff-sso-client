@@ -11,7 +11,12 @@ class ProtectAllViewsMiddleware:
         self.get_response = get_response
         self.anonymous_paths = getattr(
             settings,
-            'AUTHBROKER_ANONYMOUS_PATHS',
+            "AUTHBROKER_ANONYMOUS_PATHS",
+            (),
+        )
+        self.anonymous_url_names = getattr(
+            settings,
+            "AUTHBROKER_ANONYMOUS_URL_NAMES",
             (),
         )
 
@@ -23,17 +28,23 @@ class ProtectAllViewsMiddleware:
 
         querystring = urlencode(params)
 
-        redirect_url = reverse('authbroker_client:login')
+        redirect_url = reverse("authbroker_client:login")
 
         return redirect(f"{redirect_url}?{querystring}")
 
     def __call__(self, request):
-        if (
-            request.path not in self.anonymous_paths
-            and resolve(request.path).app_name != "authbroker_client"  # noqa: W503
-            and not request.user.is_authenticated  # noqa: W503
-        ):
-            return self.get_redirect_url(request)
+        if not request.user.is_authenticated:
+            resolved_path = resolve(request.path)
+            is_anonymous_path = request.path in self.anonymous_paths
+            is_anonymous_url_name = resolved_path.url_name in self.anonymous_url_names
+            is_authbroker_client_path = resolved_path.app_name == "authbroker_client"
+
+            if (
+                not is_anonymous_path
+                and not is_anonymous_url_name
+                and not is_authbroker_client_path
+            ):
+                return self.get_redirect_url(request)
 
         response = self.get_response(request)
         return response
