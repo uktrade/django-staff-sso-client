@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.0.1](https://pypi.org/project/django-staff-sso-client/4.0.1/) (2022-06-21)
+
+**Implemented enhancements:**
+
+- Add ability to mark URL names as anonymous.
+
 ## [4.0.0](https://pypi.org/project/django-staff-sso-client/4.0.0/) (2022-04-12)
 
 **Implemented enhancements:**
