@@ -44,7 +44,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
-        'Django>=3.0,<4.1',
+        'Django>=3.0,<4.2',
         'requests_oauthlib',
     ],
     extras_require={
