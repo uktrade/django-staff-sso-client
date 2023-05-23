@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.2.0](https://pypi.org/project/django-staff-sso-client/4.2.0/) (2023-05-23)
+
+**Implemented enhancements:**
+
+- Add support for Django 4.2
+
 ## [4.1.1](https://pypi.org/project/django-staff-sso-client/4.1.1/) (2022-11-18)
 
 **Implemented enhancements:**
