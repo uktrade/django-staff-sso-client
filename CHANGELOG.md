@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.2.2](https://pypi.org/project/django-staff-sso-client/4.2.2/) (2024-02-21)
+[Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/37/)
+
+- Bump Django to 4.2.10 minimum
+
 ## [4.2.1](https://pypi.org/project/django-staff-sso-client/4.2.1/) (2023-10-02)
 
 **Fixed bugs:**
