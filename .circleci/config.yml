@@ -12,7 +12,7 @@ jobs:
             . venv/bin/activate
             pip install --upgrade --no-cache-dir pip
             make test_requirements
-            pip install --no-cache-dir django==3.2.13
+            pip install --no-cache-dir django==3.2.25
       - run:
           name: Run tests
           command: |
@@ -32,6 +32,27 @@ jobs:
             . venv/bin/activate
             pip install --upgrade --no-cache-dir pip
             make test_requirements
+            pip install --no-cache-dir django==4.2.13
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            make pytest
+            codecov
+
+  test_django5:
+    docker:
+      - image: cimg/python:3.12.4
+    steps:
+      - checkout
+      - run:
+          name: Create virtualenv and install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install --upgrade --no-cache-dir pip
+            make test_requirements
+            pip install --no-cache-dir django==5.0.7
       - run:
           name: Run tests
           command: |
@@ -71,6 +92,7 @@ workflows:
     jobs:
       - test_django3
       - test_django4
+      - test_django5
       - flake8
       - publish_to_pypi:
           requires:
