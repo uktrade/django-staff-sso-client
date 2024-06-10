@@ -52,7 +52,7 @@ jobs:
             . venv/bin/activate
             pip install --upgrade --no-cache-dir pip
             make test_requirements
-            pip install --no-cache-dir django==5.0.7
+            pip install --no-cache-dir django==5.0.6
       - run:
           name: Run tests
           command: |
