@@ -42,7 +42,7 @@ jobs:
 
   test_django5:
     docker:
-      - image: cimg/python:3.12.4
+      - image: cimg/python:3.12.3
     steps:
       - checkout
       - run:
