@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.2.3](https://pypi.org/project/django-staff-sso-client/4.2.2/) (2024-02-21)
+
+- Added support for Django 5
+
 ## [4.2.2](https://pypi.org/project/django-staff-sso-client/4.2.2/) (2024-02-21)
 [Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/37/)
 
