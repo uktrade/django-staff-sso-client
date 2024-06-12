@@ -19,10 +19,6 @@ def get_version():
         ))
 
 
-
-
-
-
 setup(
     name='django_staff_sso_client',
     version=get_version(),
