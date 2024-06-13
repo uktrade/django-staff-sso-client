@@ -2,4 +2,5 @@ from authbroker_client.version import __version__
 
 
 def test_version():
-    assert __version__ == "4.2.2"
+    # Tests the version of the package
+    assert __version__ == "4.3.0"

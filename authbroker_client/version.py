@@ -1,1 +1,2 @@
-__version__ = "4.2.2"
+# The version of the package
+__version__ = "4.3.0"
