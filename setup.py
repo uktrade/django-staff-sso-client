@@ -42,10 +42,11 @@ setup(
         'Framework :: Django :: 3.0',
         'Framework :: Django :: 4.0',
         'Framework :: Django :: 4.2',
+        'Framework :: Django :: 5.0',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
-        'Django>=4.2.10,<5.0',
+        'Django>=4.2.10,<=5.0',
         'requests_oauthlib',
     ],
     extras_require={
