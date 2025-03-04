@@ -111,6 +111,15 @@ MIDDLEWARE = [
 ]
 ```
 
+For local development with https://github.com/uktrade/mock-sso, where it runs under a port 8001 as a Docker service called `sso` for example, add the following to your settings file.
+
+```
+AUTHBROKER_INTERNAL_URL = 'http://sso:8001'
+```
+
+For remote deployments, AUTHBROKER_INTERNAL_URL can be ommitted or equal to AUTHBROKER_URL.
+
+
 ## Change the default user id field
 
 Staff-sso maintains two unique user ids for each user: the `email_user_id` field, which is in an email format [NOTE: it is purely a unique id, not a valid email address] and the `user_id` field, which is a GUID.  By default (from version 3.0.0 onwards) django-staff-sso-client identifies users based on the `email_user_id` field.  This is the preferred option for most cases.  If however, you need to use the `user_id` field, then add this to your settings.py file:

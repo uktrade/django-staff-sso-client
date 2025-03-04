@@ -9,10 +9,14 @@ from requests_oauthlib import OAuth2Session
 
 
 TOKEN_SESSION_KEY = '_authbroker_token'
-PROFILE_URL = urljoin(settings.AUTHBROKER_URL, '/api/v1/user/me/')
-INTROSPECT_URL = urljoin(settings.AUTHBROKER_URL, 'o/introspect/')
-TOKEN_URL = urljoin(settings.AUTHBROKER_URL, '/o/token/')
+
 AUTHORISATION_URL = urljoin(settings.AUTHBROKER_URL, '/o/authorize/')
+
+AUTHBROKER_URL = getattr(settings, 'AUTHBROKER_INTERNAL_URL', settings.AUTHBROKER_URL)
+PROFILE_URL = urljoin(AUTHBROKER_URL, '/api/v1/user/me/')
+INTROSPECT_URL = urljoin(AUTHBROKER_URL, 'o/introspect/')
+TOKEN_URL = urljoin(AUTHBROKER_URL, '/o/token/')
+
 TOKEN_CHECK_PERIOD_SECONDS = 60
 
 
