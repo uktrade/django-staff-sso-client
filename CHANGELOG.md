@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.4.0](https://pypi.org/project/django-staff-sso-client/4.4.0/) (2025-03-05)
+
+- Add the optional AUTHBROKER_INTERNAL_URL setting.
+  
+  This allows the external (internet/user-facing) and internal (Django application->SSO) URLs to be different.
+
 ## [4.3.0](https://pypi.org/project/django-staff-sso-client/4.3.0/) (2024-06-11)
 
 - Added support for Django 5
