@@ -54,7 +54,7 @@ class ProtectAllViewsMiddelwareTestCase(TestCase):
         "authbroker_client.middleware.settings",
         AUTHBROKER_ANONYMOUS_URL_NAMES=("home",),
     )
-    def test_unresolved_path(self, redirect, settings):
+    def test_unresolved_path(self, settings):
         unresolved_path_request = RequestFactory().get("/not.a.real.path")
         unresolved_path_request.user = AnonymousUser()
         middleware = ProtectAllViewsMiddleware(get_response=get_response_fake)
@@ -76,6 +76,5 @@ class ProtectAllViewsMiddelwareTestCase(TestCase):
 
         with pytest.raises(Resolver404):
             response = middleware(request=unresolved_path_request)
-
-        assert not redirect.called
-        assert response == "the-public-view"
+            assert not redirect.called
+            assert response == "the-public-view"
