@@ -62,7 +62,7 @@ class ProtectAllViewsMiddelwareTestCase(TestCase):
         response = middleware(request=unresolved_path_request)
 
         assert response.status_code == 302
-        assert response.url == "/auth/login/?next=/not.a.real.path"
+        assert response.url == "/auth/login/?next=%2Fnot.a.real.path"
 
     @mock.patch(
         "authbroker_client.middleware.settings", AUTHBROKER_ANONYMOUS_PATHS=("/not.a.real.path",)
