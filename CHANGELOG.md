@@ -1,9 +1,15 @@
 # Changelog
 
+## [4.4.1](https://pypi.org/project/django-staff-sso-client/4.4.1/) (2025-07-02)
+
+**Fixed bugs:**
+
+- Prevent unauthenticated sessions from receiving 404 responses for paths that fail to be routed.
+
 ## [4.4.0](https://pypi.org/project/django-staff-sso-client/4.4.0/) (2025-03-05)
 
 - Add the optional AUTHBROKER_INTERNAL_URL setting.
-  
+
   This allows the external (internet/user-facing) and internal (Django application->SSO) URLs to be different.
 
 ## [4.3.0](https://pypi.org/project/django-staff-sso-client/4.3.0/) (2024-06-11)
