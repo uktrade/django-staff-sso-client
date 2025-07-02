@@ -1,10 +1,11 @@
 from unittest import mock
 
 import pytest
-from authbroker_client.middleware import ProtectAllViewsMiddleware
 from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from django.test.client import RequestFactory
+
+from authbroker_client.middleware import ProtectAllViewsMiddleware
 
 
 def get_response_fake(request):
@@ -44,6 +45,32 @@ class ProtectAllViewsMiddelwareTestCase(TestCase):
     def test_anonymous_path_name(self, redirect, settings):
         middleware = ProtectAllViewsMiddleware(get_response=get_response_fake)
         response = middleware(request=self.request)
+
+        assert not redirect.called
+        assert response == "the-public-view"
+
+    @mock.patch(
+        "authbroker_client.middleware.settings",
+        AUTHBROKER_ANONYMOUS_URL_NAMES=("home",),
+    )
+    @mock.patch("authbroker_client.middleware.redirect")
+    def test_unresolved_path(self, redirect, settings):
+        middleware = ProtectAllViewsMiddleware(get_response=get_response_fake)
+        unresolved_path_request = RequestFactory().get("/not.a.real.path")
+        response = middleware(request=unresolved_path_request)
+
+        assert redirect.called
+        assert response.status_code == 302
+        assert response.url == "/auth/login/?next=%2F"
+
+    @mock.patch(
+        "authbroker_client.middleware.settings", AUTHBROKER_ANONYMOUS_PATHS=("/not.a.real.path",)
+    )
+    @mock.patch("authbroker_client.middleware.redirect")
+    def test_unresolved_anonymous_path(self, redirect, settings):
+        middleware = ProtectAllViewsMiddleware(get_response=get_response_fake)
+        unresolved_path_request = RequestFactory().get("/not.a.real.path")
+        response = middleware(request=unresolved_path_request)
 
         assert not redirect.called
         assert response == "the-public-view"
