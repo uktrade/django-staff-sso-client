@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.shortcuts import redirect
 from django.urls import resolve, reverse
+from django.urls.exceptions import Resolver404
 
 
 class ProtectAllViewsMiddleware:
@@ -34,8 +35,15 @@ class ProtectAllViewsMiddleware:
 
     def __call__(self, request):
         if not request.user.is_authenticated:
-            resolved_path = resolve(request.path)
             is_anonymous_path = request.path in self.anonymous_paths
+
+            try:
+                resolved_path = resolve(request.path)
+            except Resolver404 as e:
+                if is_anonymous_path:
+                    raise e
+                return self.get_redirect_url(request)
+
             is_anonymous_url_name = resolved_path.url_name in self.anonymous_url_names
             is_authbroker_client_path = resolved_path.app_name == "authbroker_client"
 
