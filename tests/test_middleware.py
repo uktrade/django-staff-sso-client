@@ -55,8 +55,10 @@ class ProtectAllViewsMiddelwareTestCase(TestCase):
     )
     @mock.patch("authbroker_client.middleware.redirect")
     def test_unresolved_path(self, redirect, settings):
-        middleware = ProtectAllViewsMiddleware(get_response=get_response_fake)
         unresolved_path_request = RequestFactory().get("/not.a.real.path")
+        unresolved_path_request.user = AnonymousUser()
+        middleware = ProtectAllViewsMiddleware(get_response=get_response_fake)
+
         response = middleware(request=unresolved_path_request)
 
         assert redirect.called
@@ -68,8 +70,10 @@ class ProtectAllViewsMiddelwareTestCase(TestCase):
     )
     @mock.patch("authbroker_client.middleware.redirect")
     def test_unresolved_anonymous_path(self, redirect, settings):
-        middleware = ProtectAllViewsMiddleware(get_response=get_response_fake)
         unresolved_path_request = RequestFactory().get("/not.a.real.path")
+        unresolved_path_request.user = AnonymousUser()
+        middleware = ProtectAllViewsMiddleware(get_response=get_response_fake)
+
         response = middleware(request=unresolved_path_request)
 
         assert not redirect.called
