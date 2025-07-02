@@ -4,6 +4,7 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.urls.exceptions import Resolver404
 
 from authbroker_client.middleware import ProtectAllViewsMiddleware
 
@@ -74,7 +75,8 @@ class ProtectAllViewsMiddelwareTestCase(TestCase):
         unresolved_path_request.user = AnonymousUser()
         middleware = ProtectAllViewsMiddleware(get_response=get_response_fake)
 
-        response = middleware(request=unresolved_path_request)
+        with pytest.raises(Resolver404):
+            response = middleware(request=unresolved_path_request)
 
         assert not redirect.called
         assert response == "the-public-view"
