@@ -54,7 +54,6 @@ class ProtectAllViewsMiddelwareTestCase(TestCase):
         "authbroker_client.middleware.settings",
         AUTHBROKER_ANONYMOUS_URL_NAMES=("home",),
     )
-    @mock.patch("authbroker_client.middleware.redirect")
     def test_unresolved_path(self, redirect, settings):
         unresolved_path_request = RequestFactory().get("/not.a.real.path")
         unresolved_path_request.user = AnonymousUser()
