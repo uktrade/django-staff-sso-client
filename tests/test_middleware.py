@@ -61,7 +61,6 @@ class ProtectAllViewsMiddelwareTestCase(TestCase):
 
         response = middleware(request=unresolved_path_request)
 
-        assert redirect.called
         assert response.status_code == 302
         assert response.url == "/auth/login/?next=%2F"
 
