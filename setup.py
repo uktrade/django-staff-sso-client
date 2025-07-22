@@ -36,17 +36,19 @@ setup(
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Framework :: Django',
-        'Framework :: Django :: 3.0',
-        'Framework :: Django :: 4.0',
         'Framework :: Django :: 4.2',
+        'Framework :: Django :: 5.0',
+        'Framework :: Django :: 5.1',
+        'Framework :: Django :: 5.2',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
         'Django>=4.2.10,<6.0',
         'requests_oauthlib',
+        'django-log-formatter-asim~=1.1'
     ],
     extras_require={
         'test': [

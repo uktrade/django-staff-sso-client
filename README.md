@@ -12,9 +12,9 @@ A Django client for `staff-sso`
 
 ## Requirements
 
-[Python 3.7](https://www.python.org/downloads/release/python-370/)
+[Python 3.9](https://www.python.org/downloads/release/python-390/)
 
-[Django>=3.2](https://www.djangoproject.com/)
+[Django>=4.2](https://www.djangoproject.com/)
 
 Version 4+ of this package drops support for Django version 2.2.
 
