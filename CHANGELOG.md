@@ -1,5 +1,35 @@
 # Changelog
 
+## [5.0.0](https://pypi.org/project/django-staff-sso-client/5.0.0/) (2025-07-24)
+
+- Add automatic logging of authentication events (Logon, Logoff, Failed Logon) in ASIM format
+  to standard output.
+
+  Example generated event:
+  ```json
+  {
+    "EventSchema": "Authentication",
+    "EventSchemaVersion": "0.1.4",
+    "EventType": "Logon",
+    "EventResult": "Success",
+    "LogonMethod": "Staff-SSO",
+    "EventStartTime": "2025-07-24T08:50:54.528199+00:00",
+    "EventSeverity": "Informational",
+    "EventOriginalType": "001a",
+    "HttpHost": "example.com",
+    "SrcIpAddr": "127.0.0.1",
+    "TargetUrl": "http://example.com/auth/callback/?state=02K0OS73HmKcrpam5vsAWxpOxiDeZ1&code=someCode",
+    "TargetSessionId": "4c8ae1f7dcb3f36d88151ccdf412d8c7aef9d6c9ed24c2f0edc4773f65c24a2d352c6485d6e45835356adeb1349830baaf919cf32347a1075737e46979a761af"
+  }
+  ```
+  Also see https://github.com/uktrade/django-log-formatter-asim for more information on event
+  logging.
+
+
+**Breaking changes:**
+
+- Dropped support for Python 3.7 and 3.8 which are both end-of-life.
+
 ## [4.4.1](https://pypi.org/project/django-staff-sso-client/4.4.1/) (2025-07-02)
 
 **Fixed bugs:**
