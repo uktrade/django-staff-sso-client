@@ -53,7 +53,7 @@ setup(
             'pytest==7.1.1',
             'pytest-cov',
             'pytest-django',
-            'flake8==4.0.1',
+            'flake8==5.0.4',
             'requests_mock',
             'codecov',
             'build',
