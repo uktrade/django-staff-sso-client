@@ -13,8 +13,8 @@ class AuthbrokerBackend:
     def authenticate(self, request, **kwargs):
         client = get_client(request)
         if has_valid_token(client):
-            log_successful_login(request)
             profile = get_profile(client)
+            log_successful_login(request, profile)
             return self.get_or_create_user(profile)
         else:
             log_failed_login(request)

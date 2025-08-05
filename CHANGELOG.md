@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.0.1](https://pypi.org/project/django-staff-sso-client/5.0.1/) (2025-08-06)
+
+- Add `TargetUsername` field to a Successful Logon event (functionality added in v5.0.0).
+
 ## [5.0.0](https://pypi.org/project/django-staff-sso-client/5.0.0/) (2025-07-24)
 
 - Add automatic logging of authentication events (Logon, Logoff, Failed Logon) in ASIM format

@@ -23,12 +23,16 @@ def test_does_not_emit_logs_on_logout_without_valid_token(mocked_has_valid_token
     assert_no_logs_generated(capsys)
 
 
-def assert_event_logged(capsys, type, result):
+def assert_event_logged(capsys, type, result, username=None):
     (out, _) = capsys.readouterr()
     event = json.loads(out)
 
     assert event["EventType"] == type
     assert event["EventResult"] == result
+    if username is None:
+        assert "TargetUsername" not in event
+    else:
+        assert event["TargetUsername"] == username
     assert event["LogonMethod"] == "Staff-SSO"
 
 
