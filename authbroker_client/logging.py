@@ -1,18 +1,28 @@
+from typing import TypedDict
+from django.http import HttpRequest
+
 from django_log_formatter_asim.events import log_authentication
 from django.contrib.auth.signals import user_logged_out
 from authbroker_client.utils import get_client, has_valid_token
 
 
-def log_successful_login(request):
+class Profile(TypedDict):
+    email_user_id: str
+
+
+def log_successful_login(request: HttpRequest, profile: Profile):
     log_authentication(
         request,
         event=log_authentication.Event.Logon,
         result=log_authentication.Result.Success,
         login_method=log_authentication.LoginMethod.StaffSSO,
+        user={
+            'username': profile['email_user_id'],
+        }
     )
 
 
-def log_failed_login(request):
+def log_failed_login(request: HttpRequest):
     log_authentication(
         request,
         event=log_authentication.Event.Logon,

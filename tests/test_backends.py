@@ -103,7 +103,11 @@ def test_valid_user_logs_success(mocked_has_valid_token, mocked_get_profile, cap
     }
     request = rf.get('/')
     AuthbrokerBackend().authenticate(request)
-    assert_event_logged(capsys, "Logon", "Success")
+
+    # Log the `email_user_id` as it:
+    #   - Contains the users first_name and last_name, so can be used to easily correlate against other systems
+    #   - Is unique to a specific record within Staff SSO.
+    assert_event_logged(capsys, "Logon", "Success", "an-email_user_id@id.test.com")
 
 
 @pytest.mark.django_db
