@@ -37,6 +37,7 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.13',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Framework :: Django',
         'Framework :: Django :: 4.2',
