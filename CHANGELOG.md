@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.0.2](https://pypi.org/project/django-staff-sso-client/5.0.2/) (2025-09-22)
+
+- Bump python to 3.13.7
+
 ## [5.0.1](https://pypi.org/project/django-staff-sso-client/5.0.1/) (2025-08-06)
 
 - Add `TargetUsername` field to a Successful Logon event (functionality added in v5.0.0).

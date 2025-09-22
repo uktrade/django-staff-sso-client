@@ -2,7 +2,7 @@ version: 2
 jobs:
   test_django3:
     docker:
-      - image: cimg/python:3.10.4
+      - image: cimg/python:3.13.7
     steps:
       - checkout
       - run:
@@ -22,7 +22,7 @@ jobs:
 
   test_django4:
     docker:
-      - image: cimg/python:3.10.4
+      - image: cimg/python:3.13.7
     steps:
       - checkout
       - run:
@@ -62,7 +62,7 @@ jobs:
 
   flake8:
     docker:
-      - image: cimg/python:3.10.4
+      - image: cimg/python:3.13.7
     steps:
       - checkout
       - run:
@@ -75,7 +75,7 @@ jobs:
 
   publish_to_pypi:
     docker:
-      - image: cimg/python:3.10.4
+      - image: cimg/python:3.13.7
     steps:
       - checkout
       - run:
