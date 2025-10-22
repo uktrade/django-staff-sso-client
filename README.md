@@ -28,7 +28,7 @@ For Django versions `1.11 <= Django < 2.2` install v1.0.1:
 
 `pip install django-staff-sso-client==1.0.1`
 
-This client assumes your app  has either `raven` or `sentry_sdk` installed
+This client has support for `raven` or `sentry_sdk`, but neither is required.
 
 [Raven Python](https://github.com/getsentry/raven-python)
 
@@ -143,15 +143,15 @@ Here's an example staff-sso profile, which is available at the point of user cre
 
 ```
 {
-    'user_id': '6fa3b542-9a6f-4fc3-a248-168596572999',   
-    'email_user_id': 'john.smith-6fa3b542@id.trade.gov.uk',    
+    'user_id': '6fa3b542-9a6f-4fc3-a248-168596572999',
+    'email_user_id': 'john.smith-6fa3b542@id.trade.gov.uk',
     'email': 'john.smith@someplace.gov.uk',
     'contact_email': 'john.smith@someemail.com',
     'related_emails': [   'jsmith@someotherplace.com',
-                          'me@johnsmith.com'],  
+                          'me@johnsmith.com'],
     'first_name': 'John',
-    'last_name': 'Smith',                
-    'groups': [ ... ],                    
+    'last_name': 'Smith',
+    'groups': [ ... ],
     'permitted_applications': [ ... ],
     'access_profiles': [ ... ]
 }
