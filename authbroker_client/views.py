@@ -21,7 +21,11 @@ try:
 
     capture_exception = client.captureException
 except ImportError:
-    from sentry_sdk import capture_exception
+    try:
+        from sentry_sdk import capture_exception
+    except ImportError:
+        def capture_exception():
+            return
 
 
 def get_next_url(request):
