@@ -11,6 +11,7 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install --upgrade --no-cache-dir pip
+            pip install pip setuptools --upgrade 
             make test_requirements
             pip install --no-cache-dir django==3.2.25
       - run:
