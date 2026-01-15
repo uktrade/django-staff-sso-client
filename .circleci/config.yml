@@ -1,23 +1,5 @@
 version: 2
 jobs:
-  test_django3:
-    docker:
-      - image: cimg/python:3.13.7
-    steps:
-      - checkout
-      - run:
-          name: Create virtualenv and install dependencies, run pytest
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install --upgrade --no-cache-dir pip
-            pip install pip setuptools --upgrade 
-            make test_requirements
-            pip install --no-cache-dir django==3.2.25
-            . venv/bin/activate
-            make pytest
-            codecov
-
   test_django4:
     docker:
       - image: cimg/python:3.13.7
@@ -88,13 +70,11 @@ workflows:
   version: 2
   test_and_publish_to_pypi:
     jobs:
-      - test_django3
       - test_django4
       - test_django5
       - flake8
       - publish_to_pypi:
           requires:
-            - test_django3
             - test_django4
           filters:
             branches:
