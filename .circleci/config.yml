@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Create virtualenv and install dependencies
+          name: Create virtualenv and install dependencies, run pytest
           command: |
             python3 -m venv venv
             . venv/bin/activate
@@ -14,9 +14,6 @@ jobs:
             pip install pip setuptools --upgrade 
             make test_requirements
             pip install --no-cache-dir django==3.2.25
-      - run:
-          name: Run tests
-          command: |
             . venv/bin/activate
             make pytest
             codecov
