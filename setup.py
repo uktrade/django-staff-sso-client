@@ -41,13 +41,12 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy',
         'Framework :: Django',
         'Framework :: Django :: 4.2',
-        'Framework :: Django :: 5.0',
-        'Framework :: Django :: 5.1',
         'Framework :: Django :: 5.2',
+        'Framework :: Django :: 6.0',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
-        'Django>=4.2.10,<6.0',
+        'Django>=4.2.10,<7.0',
         'requests_oauthlib',
         'django-log-formatter-asim~=1.1'
     ],

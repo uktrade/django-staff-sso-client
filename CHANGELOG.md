@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.1.0](https://pypi.org/project/django-staff-sso-client/5.1.2/) (2026-02-05)
+
+- Added support for Django 6.
+
 ## [5.0.2](https://pypi.org/project/django-staff-sso-client/5.0.2/) (2025-09-22)
 
 - Bump python to 3.13.7
