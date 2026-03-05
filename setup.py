@@ -47,7 +47,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
-        'Django>=4.2.10,<6.0',
+        'Django>=4.2.10,<7.0',
         'requests_oauthlib',
         'django-log-formatter-asim~=1.1'
     ],
