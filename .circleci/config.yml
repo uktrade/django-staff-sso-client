@@ -99,4 +99,4 @@ workflows:
             - test_django4
           filters:
             branches:
-              only: master
+              only: main
