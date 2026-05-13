@@ -211,4 +211,4 @@ This is achieved by changing the Django settings for the app which is importing 
 ```
 TEST_SSO_PROVIDER_SET_RETURNED_ACCESS_TOKEN = 'someCode'
 ```
-where 'someCode' will then be provided as the 'access token' during the OAuth callback to mock-sso. (Again, see the [mock-sso docs](https://github.com/uktrade/mock-sso/blob/master/README.md) for more detail.)
+where 'someCode' will then be provided as the 'access token' during the OAuth callback to mock-sso. (Again, see the [mock-sso docs](https://github.com/uktrade/mock-sso/blob/master/README.md) for more detail)
