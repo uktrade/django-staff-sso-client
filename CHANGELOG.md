@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.2.1](https://pypi.org/project/django-staff-sso-client/5.2.1/) (2026-04-25)
+[Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/60/files)
+
+- Remove the dependency on Sentry 
+
 ## [5.0.2](https://pypi.org/project/django-staff-sso-client/5.0.2/) (2025-09-22)
 
 - Bump python to 3.13.7

@@ -1,3 +1,4 @@
+import logging
 from django.views.generic.base import RedirectView, View
 from django.shortcuts import redirect
 from django.http import HttpResponseBadRequest, HttpResponseServerError
@@ -13,15 +14,10 @@ from authbroker_client.utils import (
 )
 
 
+logger = logging.getLogger(__name__)
+
+
 REDIRECT_SESSION_FIELD_NAME = f"_oauth2_{REDIRECT_FIELD_NAME}"
-
-
-try:
-    from raven.contrib.django.raven_compat.models import client
-
-    capture_exception = client.captureException
-except ImportError:
-    from sentry_sdk import capture_exception
 
 
 def get_next_url(request):
@@ -93,7 +89,7 @@ class AuthCallbackView(View):
         # an exception. However, looking at the fetch_code method, I'm not entirely sure what exceptions it
         # would raise in this instance.
         except BaseException:
-            capture_exception()
+            logger.exception("Failed to retrieve access token")
 
         # create the user
         user = authenticate(request)

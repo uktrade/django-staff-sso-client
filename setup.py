@@ -64,7 +64,6 @@ setup(
             'wheel',
             'setuptools',
             'requests-mock',
-            'raven',
         ]
     }
 )
