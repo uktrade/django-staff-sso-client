@@ -58,6 +58,9 @@ def test_callback_view_no_auth_state(client):
 class StubSessionBackend(dict):
     session_key = "123"
 
+    def is_empty(self):
+        return bool(self)
+
 
 @pytest.mark.django_db
 @mock.patch('authbroker_client.views.get_client')
