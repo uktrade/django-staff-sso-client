@@ -1,5 +1,7 @@
 from unittest import mock
 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 
 import pytest
@@ -7,6 +9,14 @@ import pytest
 from authbroker_client.utils import AUTHORISATION_URL, TOKEN_SESSION_KEY
 from authbroker_client.views import AuthCallbackView, REDIRECT_SESSION_FIELD_NAME
 
+
+def _test_user():
+    return get_user_model().objects.create(
+        username="test",
+        email="test",
+        is_active=True, 
+    ) 
+    
 
 @pytest.mark.django_db
 def test_auth_view(client):
@@ -50,9 +60,11 @@ def test_callback_view_no_auth_code(client):
 
 @pytest.mark.django_db
 def test_callback_view_no_auth_state(client):
+    """Redirect back to `/auth/login/` and restart the auth flow"""
     url = reverse('authbroker:callback')
     response = client.get(url, {'code': 'foo'})
-    assert response.status_code == 500
+    assert response.status_code == 302 
+    assert response.url == reverse('authbroker:login')
 
 
 class StubSessionBackend(dict):
@@ -68,6 +80,7 @@ def test_callback_view_token(mocked_get_client, rf):
     mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
     url = reverse('authbroker:callback')
     request = rf.get(url)
+    request.user = AnonymousUser 
     request.session = StubSessionBackend({f'{TOKEN_SESSION_KEY}_oauth_state': 'state'})
     request.GET = {'code': 'foo'}
     response = AuthCallbackView.as_view()(request)
@@ -81,6 +94,7 @@ def test_callback_view_token_with_next_url(mocked_get_client, rf):
     mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
     url = reverse('authbroker:callback')
     request = rf.get(url)
+    request.user = AnonymousUser
     request.session = StubSessionBackend({
         f'{TOKEN_SESSION_KEY}_oauth_state': 'state',
         REDIRECT_SESSION_FIELD_NAME: '/go-here-after-authenticating/'
@@ -97,6 +111,7 @@ def test_callback_view_token_with_unsafe_next_url(mocked_get_client, rf):
     mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
     url = reverse('authbroker:callback')
     request = rf.get(url)
+    request.user = AnonymousUser
     request.session = StubSessionBackend({
         f'{TOKEN_SESSION_KEY}_oauth_state': 'state',
         REDIRECT_SESSION_FIELD_NAME: 'https://danger.com/'
@@ -105,3 +120,21 @@ def test_callback_view_token_with_unsafe_next_url(mocked_get_client, rf):
     response = AuthCallbackView.as_view()(request)
     assert response.status_code == 302
     assert response.url == '/'
+
+
+@pytest.mark.django_db
+@mock.patch('authbroker_client.views.get_client')
+def test_callback_user_already_authenticated(mocked_get_client, rf):
+    """Short circuit the oauth processs if the user is already authenticated"""
+    mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
+    url = reverse('authbroker:callback')
+    request = rf.get(url)
+    request.user = _test_user() 
+    request.session = StubSessionBackend({
+        f'{TOKEN_SESSION_KEY}_oauth_state': 'state',
+        REDIRECT_SESSION_FIELD_NAME: 'https://danger.com/'
+    })
+    request.GET = {'code': 'foo'}
+    response = AuthCallbackView.as_view()(request)
+    assert response.status_code == 302
+    assert not mocked_get_client.called
