@@ -12,16 +12,19 @@ from authbroker_client.utils import (
     TOKEN_URL,
     TOKEN_SESSION_KEY,
 )
+from authbroker_client.state import (
+    store_state,
+    pop_state,
+    use_cache_state_store,
+    REDIRECT_SESSION_FIELD_NAME,
+)
 
 logger = logging.getLogger(__name__)
-
-REDIRECT_SESSION_FIELD_NAME = f"_oauth2_{REDIRECT_FIELD_NAME}"
-OAUTH_STATE_SESSION_KEY = TOKEN_SESSION_KEY + "_oauth_state"
 
 
 def _request_fingerprint(request):
     """Fields that let us correlate the login leg with the callback leg and
-    diagnose *why* the session state is missing. """
+    diagnose why the session state is missing. """
     return {
         "session_key": request.session.session_key,
         "cookie_present": settings.SESSION_COOKIE_NAME in request.COOKIES,
@@ -63,18 +66,15 @@ class AuthView(RedirectView):
             AUTHORISATION_URL, **auth_url_extra_kwargs
         )
 
-        self.request.session[REDIRECT_SESSION_FIELD_NAME] = get_next_url(self.request)
-        self.request.session[OAUTH_STATE_SESSION_KEY] = state
-
-        # Force the session to persist now         
         was_new = self.request.session.session_key is None
-        self.request.session.save()
+        store_state(self.request, state, get_next_url(self.request))
 
         logger.info(
             "oauth login: state issued, redirecting to SSO",
             extra={
                 "oauth_state": state,
                 "session_was_new": was_new,
+                "state_store": "cache" if use_cache_state_store() else "session",
                 **_request_fingerprint(self.request),
             },
         )
@@ -82,15 +82,26 @@ class AuthView(RedirectView):
 
 
 class AuthCallbackView(View):
+
     def get(self, request, *args, **kwargs):
+        # Short circuit the callback flow if the user is already authenticated
+        if request.user.is_authenticated:
+            next_url = get_next_url(request) or getattr(
+                settings, "LOGIN_REDIRECT_URL", "/"
+            )
+            logger.info(
+                "oauth callback: user already authenticated, short-circuiting",
+                extra={"state_store": "cache", **_request_fingerprint(request)},
+            )
+            return redirect(next_url)
+
         returned_state = request.GET.get("state")
         auth_code = request.GET.get("code", None)
-        session_state = request.session.get(OAUTH_STATE_SESSION_KEY, None)
 
         meta = {
             "oauth_state_in_query": returned_state,
-            "oauth_state_in_session": session_state,
             "code_present": bool(auth_code),
+            "state_store": "cache",
             **_request_fingerprint(request),
         }
 
@@ -98,13 +109,15 @@ class AuthCallbackView(View):
             logger.warning("oauth callback: missing auth code (400)", extra=meta)
             return HttpResponseBadRequest()
 
-        if not session_state:
-            logger.error("oauth callback: state missing from session (500)", extra=meta)
-            return HttpResponseServerError()
+        state_data = pop_state(request, returned_state)
 
-        # NOTE: logging for now, but the request should fail is there's a state mismatch.
-        if returned_state and returned_state != session_state:
-            logger.error("oauth callback: query/session state mismatch", extra=meta)
+        if state_data is None:
+            # Unknown or already consumed state. Redirect the user back through the auth flow.
+            logger.warning(
+                "oauth callback: state not found in store, restarting auth flow",
+                extra=meta,
+            )
+            return redirect("authbroker_client:login")
 
         try:
             token = get_client(request).fetch_token(
@@ -112,11 +125,14 @@ class AuthCallbackView(View):
                 client_secret=settings.AUTHBROKER_CLIENT_SECRET,
                 code=auth_code,
             )
+
             request.session[TOKEN_SESSION_KEY] = dict(token)
-            del request.session[OAUTH_STATE_SESSION_KEY]
+
             logger.info("oauth callback: token retrieved", extra=meta)
         except BaseException:
-            logger.exception("oauth callback: failed to retrieve access token", extra=meta)
+            logger.exception(
+                "oauth callback: failed to retrieve access token", extra=meta
+            )
 
         user = authenticate(request)
         if user is not None:
@@ -124,5 +140,7 @@ class AuthCallbackView(View):
         else:
             logger.warning("oauth callback: authenticate() returned no user", extra=meta)
 
-        next_url = get_next_url(request) or getattr(settings, "LOGIN_REDIRECT_URL", "/")
+        next_url = state_data.get("next_url") or getattr(
+            settings, "LOGIN_REDIRECT_URL", "/"
+        )
         return redirect(next_url)
