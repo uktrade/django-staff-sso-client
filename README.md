@@ -191,6 +191,17 @@ Alternatively, you can use the `AUTHBROKER_ANONYMOUS_URL_NAMES` setting to speci
 AUTHBROKER_ANONYMOUS_URL_NAMES = ('url-name',)
 ```
 
+## Multiple concurrent auth flows and cache storage
+
+This new logic, which requies an opt-in by setting `AUTHBROKER_USE_CACHE_STATE_STORE` in your project's settings file, attempts to resolve potential errors caused by multiple concurrent auth flows.  Two potential failure modes are:
+
+1. The state key is clobbered by concurrent auth flows. 
+2. In `/auth/callback/`, the `django.contrib.auth.login()` funcion cycles the session idy to prevent session fixation attacks. If another flow sends the old session id via a cookie, it may result in an empty session and missing state key.
+
+To remediate this the state value is incorporated into the key (e.g. `f'_oauth_{state}'`) and the state value is stored in the cache, instead of in session. Also, if `request.user.is_authenticated` is True, the `/auth/callback/` process short circuits the Oauth2 token exchange process.
+
+Apps that  use the cache need to use a cache backend that persists across processes such as the `RedisCache`. The default `LocMemCache`, which should only be used for local development, will break your SSO integration.
+
 ## Use with UKTrade mock-sso package
 
 It is possible to configure this package to work with the [mock-sso service](https://github.com/uktrade/mock-sso).

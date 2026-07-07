@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.3.0](https://pypi.org/project/django-staff-sso-client/5.3.0/) (2026-07-07)
+
+Add support for multiple concurrent auhentication flows. See the README for more information.
+
+Minor funciontality change: if the `/auth/callback/` is hit without a valie `authcode`, instead of emitting a 400/Bad Request, the user is instead redirected back to `/auth/login/` to restart the auth flow.
+
+See [README[(README.md) for more information. 
+
 ## [5.2.1](https://pypi.org/project/django-staff-sso-client/5.2.1/) (2026-04-25)
 [Full Changelog](https://github.com/uktrade/django-staff-sso-client/pull/60/files)
 
