@@ -4,7 +4,7 @@ from django.views.generic.base import RedirectView, View
 from django.shortcuts import redirect
 from django.http import HttpResponseBadRequest, HttpResponseServerError
 from django.conf import settings
-from django.contrib.auth import authenticate, login, REDIRECT_FIELD_NAME
+from django.contrib.auth import authenticate, login, BACKEND_SESSION_KEY, REDIRECT_FIELD_NAME
 from django.utils.http import url_has_allowed_host_and_scheme
 from authbroker_client.utils import (
     get_client,
@@ -18,6 +18,8 @@ from authbroker_client.state import (
     use_cache_state_store,
     REDIRECT_SESSION_FIELD_NAME,
 )
+
+DBT_SSO = "authbroker_client.backends.AuthbrokerBackend"
 
 logger = logging.getLogger(__name__)
 
@@ -84,8 +86,9 @@ class AuthView(RedirectView):
 class AuthCallbackView(View):
 
     def get(self, request, *args, **kwargs):
+        backend = request.session.get(BACKEND_SESSION_KEY)
         # Short circuit the callback flow if the user is already authenticated
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and backend == DBT_SSO:
             next_url = get_next_url(request) or getattr(
                 settings, "LOGIN_REDIRECT_URL", "/"
             )

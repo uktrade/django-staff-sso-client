@@ -2,6 +2,7 @@ from unittest import mock
 from urllib.parse import parse_qs, urlparse
 
 from django.core.cache import cache
+from django.contrib.auth import BACKEND_SESSION_KEY
 from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 
@@ -11,6 +12,7 @@ from authbroker_client.utils import AUTHORISATION_URL, TOKEN_SESSION_KEY
 from authbroker_client.state import OAUTH_STATE_SESSION_KEY
 from authbroker_client.views import AuthCallbackView, REDIRECT_SESSION_FIELD_NAME
 
+AUTHBROKER_BACKEND = "authbroker_client.backends.AuthbrokerBackend"
 
 @pytest.mark.django_db
 def test_auth_view(client):
@@ -75,7 +77,10 @@ def test_callback_view_token(mocked_get_client, rf):
     url = reverse('authbroker:callback')
     request = rf.get(url)
     request.user = AnonymousUser
-    request.session = StubSessionBackend({f'{TOKEN_SESSION_KEY}_oauth_state': 'state'})
+    request.session = StubSessionBackend({
+        BACKEND_SESSION_KEY: AUTHBROKER_BACKEND,
+        f'{TOKEN_SESSION_KEY}_oauth_state': 'state'
+    })
     request.GET = {'code': 'foo'}
     response = AuthCallbackView.as_view()(request)
     assert response.status_code == 302
@@ -90,6 +95,7 @@ def test_callback_view_token_with_next_url(mocked_get_client, rf):
     request = rf.get(url)
     request.user = AnonymousUser
     request.session = StubSessionBackend({
+        BACKEND_SESSION_KEY: AUTHBROKER_BACKEND,
         f'{TOKEN_SESSION_KEY}_oauth_state': 'state',
         REDIRECT_SESSION_FIELD_NAME: '/go-here-after-authenticating/'
     })
@@ -107,6 +113,7 @@ def test_callback_view_token_with_unsafe_next_url(mocked_get_client, rf):
     request = rf.get(url)
     request.user = AnonymousUser
     request.session = StubSessionBackend({
+        BACKEND_SESSION_KEY: AUTHBROKER_BACKEND,
         f'{TOKEN_SESSION_KEY}_oauth_state': 'state',
         REDIRECT_SESSION_FIELD_NAME: 'https://danger.com/'
     })
@@ -129,6 +136,7 @@ def test_callback_user_already_authenticated(mocked_get_client, rf, django_user_
         is_active=True,
     )
     request.session = StubSessionBackend({
+        BACKEND_SESSION_KEY: AUTHBROKER_BACKEND,
         f'{TOKEN_SESSION_KEY}_oauth_state': 'state',
         REDIRECT_SESSION_FIELD_NAME: 'https://danger.com/'
     })
@@ -208,12 +216,10 @@ def test_cache_callback_short_circuits_when_authenticated(
     client, django_user_model, use_cache
 ):
     user = django_user_model.objects.create(username='someone@example.com')
-    client.force_login(user)
-
+    client.force_login(user, backend="authbroker_client.backends.AuthbrokerBackend")
     response = client.get(
         reverse('authbroker:callback'), {'code': 'foo', 'state': 'anything'}
     )
-
     assert response.status_code == 302
     assert response.url != reverse('authbroker:login')
 
