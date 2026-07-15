@@ -87,7 +87,7 @@ class AuthCallbackView(View):
 
     def get(self, request, *args, **kwargs):
         backend = request.session.get(BACKEND_SESSION_KEY)
-        # Short circuit the callback flow if the user is already authenticated
+        # Short circuit the callback flow if the user is already authenticated via staff-sso
         if request.user.is_authenticated and backend == DBT_SSO:
             next_url = get_next_url(request) or getattr(
                 settings, "LOGIN_REDIRECT_URL", "/"
