@@ -63,4 +63,3 @@ def pop_state(request, state):
         return data
 
     return request.session.pop(OAUTH_STATE_SESSION_KEY, None)
- 

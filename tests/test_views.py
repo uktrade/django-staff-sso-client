@@ -139,6 +139,7 @@ def test_callback_user_already_authenticated(mocked_get_client, rf, django_user_
 
 # Cache based tests
 
+
 def _state_key(state):
     return f'_authbroker_oauth_state_{state}'
 

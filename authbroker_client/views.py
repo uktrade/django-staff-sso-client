@@ -51,7 +51,7 @@ def get_next_url(request):
 
 
 def get_next_url_from_state(
-    request: HttpRequest, 
+    request: HttpRequest,
     state_data: dict[str, str | None] | str
 ) -> str:
     if use_cache_state_store():
