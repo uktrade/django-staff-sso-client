@@ -14,6 +14,7 @@ from authbroker_client.views import AuthCallbackView, REDIRECT_SESSION_FIELD_NAM
 
 AUTHBROKER_BACKEND = "authbroker_client.backends.AuthbrokerBackend"
 
+
 @pytest.mark.django_db
 def test_auth_view(client):
     url = reverse('authbroker:login')
@@ -76,7 +77,7 @@ def test_callback_view_token(mocked_get_client, rf):
     mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
     url = reverse('authbroker:callback')
     request = rf.get(url)
-    request.user = AnonymousUser
+    request.user = AnonymousUser()
     request.session = StubSessionBackend({
         BACKEND_SESSION_KEY: AUTHBROKER_BACKEND,
         f'{TOKEN_SESSION_KEY}_oauth_state': 'state'
@@ -93,7 +94,7 @@ def test_callback_view_token_with_next_url(mocked_get_client, rf):
     mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
     url = reverse('authbroker:callback')
     request = rf.get(url)
-    request.user = AnonymousUser
+    request.user = AnonymousUser()
     request.session = StubSessionBackend({
         BACKEND_SESSION_KEY: AUTHBROKER_BACKEND,
         f'{TOKEN_SESSION_KEY}_oauth_state': 'state',
@@ -111,7 +112,7 @@ def test_callback_view_token_with_unsafe_next_url(mocked_get_client, rf):
     mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
     url = reverse('authbroker:callback')
     request = rf.get(url)
-    request.user = AnonymousUser
+    request.user = AnonymousUser()
     request.session = StubSessionBackend({
         BACKEND_SESSION_KEY: AUTHBROKER_BACKEND,
         f'{TOKEN_SESSION_KEY}_oauth_state': 'state',
@@ -146,6 +147,7 @@ def test_callback_user_already_authenticated(mocked_get_client, rf, django_user_
     assert not mocked_get_client.called
 
 # Cache based tests
+
 
 def _state_key(state):
     return f'_authbroker_oauth_state_{state}'
