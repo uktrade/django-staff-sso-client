@@ -69,6 +69,16 @@ AUTHENTICATION_BACKENDS = [
 ]
 ```
 
+If you use a custom authentication backend that subclasses `authbroker_client.backends.AuthbrokerBackend`, configure it with:
+
+```
+AUTHBROKER_AUTHENTICATION_BACKEND = (
+    "your_app.backends.CustomAuthbrokerBackend"
+)
+```
+
+This setting is optional. If omitted, the default backend `authbroker_client.backends.AuthbrokerBackend` will be used.
+
 Add the LOGIN_URL ( it must be '/auth/login' )
 
 ```

@@ -19,7 +19,7 @@ from authbroker_client.state import (
     REDIRECT_SESSION_FIELD_NAME,
 )
 
-DBT_SSO = "authbroker_client.backends.AuthbrokerBackend"
+DEFAULT_AUTHBROKER_BACKEND = "authbroker_client.backends.AuthbrokerBackend"
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +61,14 @@ def get_next_url_from_state(
     return get_next_url(request)
 
 
+def get_authbroker_backend() -> str:
+    return getattr(
+        settings,
+        "AUTHBROKER_AUTHENTICATION_BACKEND",
+        DEFAULT_AUTHBROKER_BACKEND,
+    )
+
+
 class AuthView(RedirectView):
     permanent = False
 
@@ -97,7 +105,7 @@ class AuthCallbackView(View):
     def get(self, request, *args, **kwargs):
         backend = request.session.get(BACKEND_SESSION_KEY)
         # Short circuit the callback flow if the user is already authenticated via staff-sso
-        if request.user.is_authenticated and backend == DBT_SSO:
+        if request.user.is_authenticated and backend == get_authbroker_backend():
             next_url = get_next_url(request) or getattr(
                 settings, "LOGIN_REDIRECT_URL", "/"
             )
