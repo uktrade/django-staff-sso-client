@@ -149,8 +149,7 @@ class AuthCallbackView(View):
         else:
             logger.warning("oauth callback: authenticate() returned no user", extra=meta)
 
-        # next_url = get_next_url_from_state(request, state_data) or getattr(
-        next_url = state_data.get("next_url") or getattr(
+        next_url = get_next_url_from_state(request, state_data) or getattr(
             settings, "LOGIN_REDIRECT_URL", "/"
         )
         return redirect(next_url)
