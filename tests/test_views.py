@@ -74,7 +74,7 @@ def test_callback_view_token(mocked_get_client, rf):
     mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
     url = reverse('authbroker:callback')
     request = rf.get(url)
-    request.user = AnonymousUser
+    request.user = AnonymousUser()
     request.session = StubSessionBackend({f'{TOKEN_SESSION_KEY}_oauth_state': 'state'})
     request.GET = {'code': 'foo'}
     response = AuthCallbackView.as_view()(request)
@@ -88,7 +88,7 @@ def test_callback_view_token_with_next_url(mocked_get_client, rf):
     mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
     url = reverse('authbroker:callback')
     request = rf.get(url)
-    request.user = AnonymousUser
+    request.user = AnonymousUser()
     request.session = StubSessionBackend({
         f'{TOKEN_SESSION_KEY}_oauth_state': 'state',
         REDIRECT_SESSION_FIELD_NAME: '/go-here-after-authenticating/'
@@ -99,13 +99,29 @@ def test_callback_view_token_with_next_url(mocked_get_client, rf):
     assert response.url == '/go-here-after-authenticating/'
 
 
+# @pytest.mark.django_db
+# @mock.patch('authbroker_client.views.get_client')
+# def test_callback_view_token_with_next_url(mocked_get_client, rf):
+#     mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
+#     url = reverse('authbroker:callback')
+#     request = rf.get(url, {'code': 'foo', 'state': 'state'})
+#     request.user = AnonymousUser()
+#     request.session = StubSessionBackend({
+#         OAUTH_STATE_SESSION_KEY: 'state',
+#         REDIRECT_SESSION_FIELD_NAME: '/go-here-after-authenticating/',
+#     })
+#     response = AuthCallbackView.as_view()(request)
+#     assert response.status_code == 302
+#     assert response.url == '/go-here-after-authenticating/'
+
+
 @pytest.mark.django_db
 @mock.patch('authbroker_client.views.get_client')
 def test_callback_view_token_with_unsafe_next_url(mocked_get_client, rf):
     mocked_get_client.return_value.fetch_token.return_value = {'token': 'test'}
     url = reverse('authbroker:callback')
     request = rf.get(url)
-    request.user = AnonymousUser
+    request.user = AnonymousUser()
     request.session = StubSessionBackend({
         f'{TOKEN_SESSION_KEY}_oauth_state': 'state',
         REDIRECT_SESSION_FIELD_NAME: 'https://danger.com/'

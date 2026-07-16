@@ -2,7 +2,7 @@ import logging
 
 from django.views.generic.base import RedirectView, View
 from django.shortcuts import redirect
-from django.http import HttpResponseBadRequest, HttpResponseServerError
+from django.http import HttpResponseBadRequest, HttpRequest
 from django.conf import settings
 from django.contrib.auth import authenticate, login, REDIRECT_FIELD_NAME
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -48,6 +48,15 @@ def get_next_url(request):
     if next_url:
         logger.info("next_url rejected by allow-list", extra={"next_url": next_url})
     return None
+
+
+def get_next_url_from_state(
+    request: HttpRequest, 
+    state_data: dict[str, str | None] | str
+) -> str:
+    if use_cache_state_store():
+        return state_data.get("next_url")
+    return get_next_url(request)
 
 
 class AuthView(RedirectView):
@@ -140,6 +149,7 @@ class AuthCallbackView(View):
         else:
             logger.warning("oauth callback: authenticate() returned no user", extra=meta)
 
+        # next_url = get_next_url_from_state(request, state_data) or getattr(
         next_url = state_data.get("next_url") or getattr(
             settings, "LOGIN_REDIRECT_URL", "/"
         )
