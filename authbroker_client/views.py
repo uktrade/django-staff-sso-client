@@ -154,13 +154,13 @@ class AuthCallbackView(View):
                 "oauth callback: failed to retrieve access token", extra=meta
             )
 
+        next_url = get_next_url_from_state(request, state_data) or getattr(
+            settings, "LOGIN_REDIRECT_URL", "/"
+        )
         user = authenticate(request)
         if user is not None:
             login(request, user)
         else:
             logger.warning("oauth callback: authenticate() returned no user", extra=meta)
 
-        next_url = get_next_url_from_state(request, state_data) or getattr(
-            settings, "LOGIN_REDIRECT_URL", "/"
-        )
         return redirect(next_url)

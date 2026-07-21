@@ -240,3 +240,63 @@ def test_cache_concurrent_flows_both_resolve(mocked_get_client, client, use_cach
 
     assert r1.url == '/a/'
     assert r2.url == '/b/'
+
+
+@pytest.mark.django_db
+@mock.patch("authbroker_client.views.authenticate")
+@mock.patch("authbroker_client.views.get_client")
+def test_callback_redirects_when_existing_session_for_different_backend_user(
+    mocked_get_client,
+    mocked_authenticate,
+    client,
+    django_user_model,
+    settings,
+):
+    settings.AUTHBROKER_USE_CACHE_STATE_STORE = False
+    settings.LOGIN_REDIRECT_URL = "/default/redirect/url"
+    settings.AUTHENTICATION_BACKENDS = [
+        "django.contrib.auth.backends.ModelBackend",
+        AUTHBROKER_BACKEND,
+    ]
+    existing_admin_user = django_user_model.objects.create_user(
+        username="admin@example.com",
+        email="admin@example.com",
+    )
+    sso_user = django_user_model.objects.create_user(
+        username="someone@example.com",
+        email="someone@example.com",
+    )
+    client.force_login(
+        existing_admin_user,
+        backend="django.contrib.auth.backends.ModelBackend",
+    )
+    # sanity check
+    assert client.session[BACKEND_SESSION_KEY] == "django.contrib.auth.backends.ModelBackend"
+    mocked_get_client.return_value.authorization_url.return_value = (
+        "https://sso.example.com/o/authorize/?state=state-A",
+        "state-A",
+    )
+    mocked_get_client.return_value.fetch_token.return_value = {"token": "test"}
+    sso_user.backend = AUTHBROKER_BACKEND
+    mocked_authenticate.return_value = sso_user
+
+    login_response = client.get(
+        reverse("authbroker:login"),
+        {"next": "/session/redirect/url"},
+    )
+
+    assert login_response.status_code == 302
+    assert client.session[REDIRECT_SESSION_FIELD_NAME] == "/session/redirect/url"
+
+    callback_response = client.get(
+        reverse("authbroker:callback"),
+        {
+            "code": "foo",
+            "state": "state-A",
+        },
+    )
+
+    assert callback_response.status_code == 302
+    assert callback_response.url == "/session/redirect/url"
+    assert callback_response.url != settings.LOGIN_REDIRECT_URL
+    assert client.session[BACKEND_SESSION_KEY] == AUTHBROKER_BACKEND
