@@ -1,0 +1,63 @@
+name: Test
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        django-version: ["5.2", "6.0"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+        exclude:
+          - django-version: 6.0
+            python-version: 3.10
+          - django-version: 6.0
+            python-version: 3.11
+
+    steps:
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+    - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+      with:
+        python-version: ${{ matrix.python-version }} 
+
+    - name: Cache pip
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      with:
+        path: ~/cache/pip
+        key: v1-djagno-staff-sso-client-${{ hashFiles('setup.py') }}
+        restore-keys: v1-django-staff-sso-client-
+
+    - name: Install dependencies
+      env:
+        DJANGO_VERSION: ${{ matrix.django-version }}
+      run: |
+        pip install --upgrade pip
+        pip install -e .[test]
+        pip install django=="${DJANGO_VERSION}.*"
+
+    - name: Run tests
+      id: run_tests
+      run: |
+        set -o pipefail
+        pytest --junitxml=pytest.xml --cov --cov-report=term-missing:skip-covered | tee pytest-coverage.txt
+
+    - name: Pytest Coverage Comment
+      if: ${{ !cancelled() && steps.run_tests.outcome != 'skipped' && github.event_name == 'pull_request'}}
+      id: coverage
+      uses: MishaKav/pytest-coverage-comment@dd5b80bde6d16941f336518e92929e89069d8451 ## v1.7.2
+      with:
+        pytest-coverage-path: pytest-coverage.txt
+        junitxml-path: pytest.xml
