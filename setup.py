@@ -53,7 +53,7 @@ setup(
     ],
     extras_require={
         'test': [
-            'pytest==7.4.4',
+            'pytest==9.0.3',
             'pytest-cov',
             'pytest-django',
             'flake8==5.0.4',
