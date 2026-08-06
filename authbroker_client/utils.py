@@ -8,14 +8,19 @@ from django.urls import reverse
 from requests_oauthlib import OAuth2Session
 
 
-TOKEN_SESSION_KEY = '_authbroker_token'
+TOKEN_SESSION_KEY = getattr(settings, "AUTHBROKER_TOKEN_SESSION_KEY", "_authbroker_token")
 
-AUTHORISATION_URL = urljoin(settings.AUTHBROKER_URL, '/o/authorize/')
+AUTHORISATION_PATH = getattr(settings, "AUTHBROKER_AUTH_PATH", "/o/authorize/")
+AUTHORISATION_URL = urljoin(settings.AUTHBROKER_URL, AUTHORISATION_PATH)
 
 AUTHBROKER_URL = getattr(settings, 'AUTHBROKER_INTERNAL_URL', settings.AUTHBROKER_URL)
-PROFILE_URL = urljoin(AUTHBROKER_URL, '/api/v1/user/me/')
-INTROSPECT_URL = urljoin(AUTHBROKER_URL, 'o/introspect/')
-TOKEN_URL = urljoin(AUTHBROKER_URL, '/o/token/')
+PROFILE_URL = getattr(settings, "AUTHBROKER_PROFILE_URL", urljoin(AUTHBROKER_URL, "/api/v1/user/me/"))
+
+INTROSPECT_PATH = getattr(settings, "AUTHBROKER_INTROSPECT_PATH", "/o/introspect/")
+INTROSPECT_URL = urljoin(AUTHBROKER_URL, INTROSPECT_PATH)
+
+TOKEN_PATH = getattr(settings, "AUTHBROKER_TOKEN_PATH", "/o/token/")
+TOKEN_URL = urljoin(AUTHBROKER_URL, TOKEN_PATH)
 
 TOKEN_CHECK_PERIOD_SECONDS = 60
 
